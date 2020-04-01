@@ -7,6 +7,12 @@ terraform {
   backend "remote" {}
 }
 
+provider "google" {
+  project = var.project_name
+  region  = var.default_region
+  zone    = var.default_zone
+}
+
 provider "google-beta" {
   project = var.project_name
   region  = var.default_region
