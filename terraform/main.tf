@@ -20,7 +20,7 @@ provider "google-beta" {
 }
 
 resource "google_compute_network" "sg_vpc" {
-  name                    = "sg_vpc"
+  name                    = "sg-vpc"
   description             = "The studygoose prod VPC."
   routing_mode            = "GLOBAL"
   auto_create_subnetworks = true
