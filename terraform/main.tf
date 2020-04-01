@@ -26,6 +26,34 @@ resource "google_compute_network" "sg_vpc" {
   auto_create_subnetworks = true
 }
 
+resource "google_compute_firewall" "allow_icmp" {
+  name          = "default-allow-icmp"
+  description   = "Allow ICMP ingress for all instances. This makes everything ping-able."
+  network       = google_compute_network.sg_vpc.name
+  direction     = "INGRESS"
+  priority      = 65534 # second lowest priority. this will be applied widely. setting a low priority makes it easy to be override.
+  source_ranges = ["0.0.0.0/0"]
+
+  allow {
+    protocol = "icmp"
+  }
+}
+
+resource "google_compute_firewall" "allow_postgres_tcp" {
+  name        = "allow-postgres-tcp"
+  description = "All TCP ingress on port 5432. This is intended to be applied to the Cloud SQL Postgres db."
+  network     = google_compute_network.sg_vpc.name
+  direction   = "INGRESS"
+  priority    = 100
+  source_tags = ["api"]
+  target_tags = ["db"]
+
+  allow {
+    protocol = "tcp"
+    ports    = [5432]
+  }
+}
+
 variable "project_name" {
   default     = "studygoose-prototype"
   description = "The main GCP project name."
