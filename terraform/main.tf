@@ -25,6 +25,10 @@ resource "google_compute_network" "sg_vpc" {
   description             = "The StudyGoose prod VPC."
   routing_mode            = "GLOBAL"
   auto_create_subnetworks = true
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "google_compute_firewall" "allow_icmp" {
