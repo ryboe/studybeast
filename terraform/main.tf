@@ -40,6 +40,7 @@ resource "google_compute_global_address" "private_ip_block" {
   provider     = google-beta
   name         = "private-ip-block"
   description  = "A block of private IP addresses that are accessible only from within the VPC. The db is assigned on of these."
+  purpose      = "VPC_PEERING"
   address_type = "INTERNAL"
   ip_version   = "IPV4"
   # We don't specify a address block because Google will automatically assign one for us.
