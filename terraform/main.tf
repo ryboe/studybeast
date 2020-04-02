@@ -41,11 +41,9 @@ resource "google_compute_global_address" "private_ip_block" {
   name         = "private-ip-block"
   description  = "A block of private IP addresses that are accessible only from within the VPC. The db is assigned on of these."
   address_type = "INTERNAL"
-  ip_version   = "IPV6"
-  # We assign a prefix length of 112 for ~65k IPs. That's extreme overkill, but
-  # this is IPv6 after all. We don't specify a CIDR block because Google will
-  # automatically assign one for us.
-  prefix_length = 112
+  ip_version   = "IPV4"
+  # We don't specify a address block because Google will automatically assign one for us.
+  prefix_length = 20 # ~4k IPs
   network       = google_compute_network.main_vpc.self_link
 }
 
