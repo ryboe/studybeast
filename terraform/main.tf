@@ -20,9 +20,10 @@ provider "google-beta" {
   zone    = var.default_zone
 }
 
-resource "google_compute_network" "sg_vpc" {
-  name                    = "sg-vpc"
-  description             = "The StudyGoose prod VPC."
+resource "google_compute_network" "main_vpc" {
+  provider                = google-beta # we need to use the beta provider to enable setting a private IP for the db
+  name                    = "main-vpc"
+  description             = "The main StudyGoose VPC."
   routing_mode            = "GLOBAL"
   auto_create_subnetworks = true
 
@@ -31,10 +32,39 @@ resource "google_compute_network" "sg_vpc" {
   }
 }
 
+# We need to allocate an IP block for private IPs. We want everything in the VPC
+# to have a private IP. This improves security and latency, since requests to
+# private IPs are routed through Google's network, not the Internet. We will
+# assign a private IP to the db later when we create it.
+resource "google_compute_global_address" "private_ip_block" {
+  provider     = google-beta
+  name         = "private-ip-block"
+  description  = "A block of private IP addresses that are accessible only from within the VPC. The db is assigned on of these."
+  address_type = "INTERNAL"
+  ip_version   = "IPV6"
+  # We assign a prefix length of 112 for ~65k IPs. That's extreme overkill, but
+  # this is IPv6 after all. We don't specify a CIDR block because Google will
+  # automatically assign one for us.
+  prefix_length = 112
+  network       = google_compute_network.main_vpc.self_link
+}
+
+# This enables private services access. This makes it possible for instances
+# within the VPC and Google services to communicate exclusively using internal
+# IP addresses. I don't really understand this, but I know it's important. You
+# can read the details here:
+#   https://cloud.google.com/sql/docs/postgres/configure-private-services-access
+resource "google_service_networking_connection" "private_vpc_connection" {
+  provider                = google-beta
+  network                 = google_compute_network.main_vpc.self_link
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_ip_block.name]
+}
+
 resource "google_compute_firewall" "allow_icmp" {
   name          = "default-allow-icmp"
   description   = "Allow ICMP ingress for all instances. This makes everything ping-able."
-  network       = google_compute_network.sg_vpc.name
+  network       = google_compute_network.main_vpc.name
   direction     = "INGRESS"
   priority      = 65534 # second lowest priority. this will be applied widely. setting a low priority makes it easy to be override.
   source_ranges = ["0.0.0.0/0"]
@@ -44,14 +74,16 @@ resource "google_compute_firewall" "allow_icmp" {
   }
 }
 
+# TODO: is this necessary when we're using private IPs?
 resource "google_compute_firewall" "allow_postgres_tcp" {
   name        = "allow-postgres-tcp"
   description = "All TCP ingress on port 5432. This is intended to be applied to the Cloud SQL Postgres db."
-  network     = google_compute_network.sg_vpc.name
+  network     = google_compute_network.main_vpc.name
   direction   = "INGRESS"
   priority    = 100
-  source_tags = ["api"]
-  target_tags = ["db"]
+  # TODO: should i enable source and target tags? how do i assign network tags?
+  # source_tags = ["api"]
+  # target_tags = ["db"]
 
   allow {
     protocol = "tcp"
@@ -71,6 +103,14 @@ resource "google_sql_database" "main" {
 resource "google_sql_database_instance" "main_primary" {
   provider         = google-beta
   database_version = "POSTGRES_12"
+  # This is a case where terraform can't figure out the dependency relationship
+  # between the db instance and private services access. This relationship only
+  # exists because we're giving the db a private IP only. If we were giving it
+  # a public IP, there would be no dependency on "private services access". So
+  # we have to explicitly specify the dependency here. For details, see the note
+  # in the docs here:
+  #  https://www.terraform.io/docs/providers/google/r/sql_database_instance.html#private-ip-instance
+  depends_on = [google_service_networking_connection.private_vpc_connection]
 
   settings {
     tier              = "db-custom-8-32768" # 8 cores, 32 GB RAM, min size to get max network bandwidth from google
@@ -131,7 +171,8 @@ resource "google_sql_database_instance" "main_primary" {
     }
 
     ip_configuration {
-      private_network = google_compute_network.sg_vpc.self_link
+      ipv4_enabled    = false                                     # don't give the db a public IPv4
+      private_network = google_compute_network.main_vpc.self_link # give the db a private IP (only accessible within the VPC)
     }
 
     maintenance_window {
