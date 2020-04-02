@@ -2,6 +2,7 @@ terraform {
   required_version = "~> 0.12.24"
   required_providers {
     tfe         = "~> 0.15.0"
+    google      = "~> 3.15.0"
     google-beta = "~> 3.15.0"
   }
   backend "remote" {}
@@ -55,19 +56,19 @@ resource "google_compute_firewall" "allow_postgres_tcp" {
 }
 
 variable "project_name" {
-  default     = "studygoose-prototype"
   description = "The main GCP project name."
   type        = string
+  default     = "studygoose-prototype"
 }
 
 variable "default_region" {
-  default     = "us-central1"
   description = "The default GCP region (us-central1 is in Iowa) for creating resources."
   type        = string
+  default     = "us-central1"
 }
 
 variable "default_zone" {
-  default     = "us-central1-b"
   description = "The default GCP zone for creating zonal resources, like VMs."
   type        = string
+  default     = "us-central1-b"
 }
