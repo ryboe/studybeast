@@ -51,6 +51,6 @@ module "vpc" {
   }
   source = "../modules/vpc"
 
-  name        = "main_user"
+  name        = "main-vpc"
   description = "The main StudyGoose VPC that holds all the instances"
 }
