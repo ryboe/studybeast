@@ -8,16 +8,22 @@ terraform {
   backend "remote" {}
 }
 
+locals {
+  gcp_project_name = "studygoose-prototype"
+  gcp_region       = "us-central1"
+  gcp_zone         = "us-central1-b"
+}
+
 provider "google" {
-  project = var.gcp_project_name
-  region  = var.gcp_region
-  zone    = var.gcp_zone
+  project = local.gcp_project_name
+  region  = local.gcp_region
+  zone    = local.gcp_zone
 }
 
 provider "google-beta" {
-  project = var.gcp_project_name
-  region  = var.gcp_region
-  zone    = var.gcp_zone
+  project = local.gcp_project_name
+  region  = local.gcp_region
+  zone    = local.gcp_zone
 }
 
 module "db" {
