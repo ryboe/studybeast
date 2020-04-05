@@ -33,8 +33,9 @@ module "db" {
   }
   source = "../modules/db"
 
-  disk_size     = 1700
-  instance_type = "db-custom-8-32768" # 8 cores, 32 GB RAM, min size to get max network bandwidth from google
+  disk_size = 1700
+  # instance_type = "db-custom-8-32768" # 8 cores, 32 GB RAM, min size to get max network bandwidth from google
+  instance_type = "db-f1-micro"       # 8 cores, 32 GB RAM, min size to get max network bandwidth from google
   password      = var.api_db_password # this is a variable because it's a secret. it's stored here: https://app.terraform.io/app/jabronesoft/workspaces/terraform-cloud-studies/variables
   user          = "api_user"
   vpc_name      = module.vpc.name
