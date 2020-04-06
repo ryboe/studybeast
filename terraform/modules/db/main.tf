@@ -88,20 +88,3 @@ resource "google_sql_user" "db_user" {
   instance = google_sql_database_instance.main_primary.name
   password = var.password
 }
-
-# TODO: is this necessary when we're using private IPs?
-resource "google_compute_firewall" "allow_postgres_tcp" {
-  name        = "allow-postgres-tcp"
-  description = "All TCP ingress on port 5432. This is intended to be applied to the Cloud SQL Postgres db."
-  network     = var.vpc_name
-  direction   = "INGRESS"
-  priority    = 100
-  # TODO: should i enable source and target tags? how do i assign network tags?
-  # source_tags = ["api"]
-  # target_tags = ["db"]
-
-  allow {
-    protocol = "tcp"
-    ports    = [5432]
-  }
-}
