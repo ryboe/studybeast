@@ -63,11 +63,11 @@ module "db" {
   db_depends_on = module.vpc.private_vpc_connection
 }
 
-module "dbproxy" {
-  source = "../modules/dbproxy"
+# module "dbproxy" {
+#   source = "../modules/dbproxy"
 
-  machine_type          = "f1-micro"
-  service_account_email = "${jsondecode(var.cloud_sql_proxy_service_account_key)["client_email"]}"
-  subnet                = module.vpc.name
-  zone                  = var.gcp_zone
-}
+#   machine_type          = "f1-micro"
+#   service_account_email = "${jsondecode(var.cloud_sql_proxy_service_account_key)["client_email"]}"
+#   subnet                = module.vpc.name
+#   zone                  = var.gcp_zone
+# }
