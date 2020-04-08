@@ -26,6 +26,17 @@ provider "google-beta" {
   zone    = local.gcp_zone
 }
 
+module "vpc" {
+  # We need the beta provider to enable setting a private IP for the db.
+  providers = {
+    google = google-beta # override the default google provider with the google-beta provider
+  }
+  source = "../modules/vpc"
+
+  name        = "main-vpc"
+  description = "The main StudyGoose VPC that holds all the instances"
+}
+
 module "db" {
   # TODO: delete this block when postgres 12 is out of beta
   providers = {
@@ -33,9 +44,10 @@ module "db" {
   }
   source = "../modules/db"
 
-  disk_size = 1700
+  # disk_size = 1700 # minimum GB to get max IOPS
   # instance_type = "db-custom-8-32768" # 8 cores, 32 GB RAM, min size to get max network bandwidth from google
-  instance_type = "db-f1-micro"       # 8 cores, 32 GB RAM, min size to get max network bandwidth from google
+  disk_size     = 10                  # TODO: use 1700 for prod
+  instance_type = "db-f1-micro"       # TODO: use db-custom for prod
   password      = var.api_db_password # this is a variable because it's a secret. it's stored here: https://app.terraform.io/app/jabronesoft/workspaces/terraform-cloud-studies/variables
   user          = "api_user"
   vpc_name      = module.vpc.name
@@ -51,13 +63,13 @@ module "db" {
   db_depends_on = module.vpc.private_vpc_connection
 }
 
-module "vpc" {
-  # We need the beta provider to enable setting a private IP for the db.
-  providers = {
-    google = google-beta # override the default google provider with the google-beta provider
-  }
-  source = "../modules/vpc"
+module "dbproxy" {
+  source = "../modules/dbproxy"
 
-  name        = "main-vpc"
-  description = "The main StudyGoose VPC that holds all the instances"
+  machine_type          = "f1-micro"
+  service_account_email = "${jsondecode(var.cloud_sql_proxy_service_account_key)["client_email"]}"
+  ssh_user              = var.gce_ssh_user
+  ssh_public_key        = var.gce_ssh_public_key
+  subnet                = module.vpc.name
+  zone                  = var.gcp_zone
 }
