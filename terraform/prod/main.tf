@@ -68,8 +68,6 @@ module "dbproxy" {
 
   machine_type          = "f1-micro"
   service_account_email = "${jsondecode(var.cloud_sql_proxy_service_account_key)["client_email"]}"
-  ssh_user              = var.gce_ssh_user
-  ssh_public_key        = var.gce_ssh_public_key
   subnet                = module.vpc.name
   zone                  = var.gcp_zone
 }

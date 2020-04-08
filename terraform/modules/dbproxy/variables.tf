@@ -9,16 +9,6 @@ variable "service_account_email" {
   type        = string
 }
 
-variable "ssh_public_key" {
-  description = "A developer's SSH public key. This allows the owner of that key to SSH into the VM"
-  type        = string
-}
-
-variable "ssh_user" {
-  description = "The user that will ssh into the proxy instance"
-  type        = string
-}
-
 variable "subnet" {
   description = "The name of the VPC subnet that the proxy instance will run in"
   type        = string

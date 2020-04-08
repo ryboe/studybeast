@@ -23,13 +23,3 @@ variable "gcp_zone" {
   description = "The default GCP zone for creating zonal resources, like VMs"
   type        = string
 }
-
-variable "gce_ssh_user" {
-  description = ""
-  type        = string
-}
-
-variable "gce_ssh_public_key" {
-  description = "The public SSH key of the gce_ssh_user"
-  type        = string
-}

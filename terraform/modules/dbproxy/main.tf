@@ -14,13 +14,13 @@ resource "google_compute_instance" "db_proxy" {
   boot_disk {
     initialize_params {
       image = "cos-cloud/cos-stable"
-      size  = 10 # smallest size disk
+      size  = 10 # smallest disk possible is 10 GB
       type  = "pd-ssd"
     }
   }
 
   metadata = {
-    ssh-keys = "${var.ssh_user}:${var.ssh_public_key}"
+    enable-oslogin = true
   }
 
   # TODO: docker run whatever
@@ -43,7 +43,17 @@ resource "google_compute_instance" "db_proxy" {
   }
 
   service_account {
-    email  = var.service_account_email
-    scopes = ["sql-admin"]
+    email = var.service_account_email
+    # These are OAuth scopes for the various Google Cloud APIs. We're already
+    # using IAM roles (specifically, Cloud SQL Editor) to control what this
+    # instance can and cannot do. We don't need another layer of OAuth
+    # permissions on top of IAM, so we grant cloud-platform scope to the
+    # instance. This is the maximum possible scope. It gives the instance
+    # access to all Google Cloud APIs through OAuth.
+    scopes = ["cloud-platform"]
   }
 }
+
+// need to add network tag to instance
+// need to create firewall rule to allow SSH to instance
+// need to update terraform provider google to 3.16.0
