@@ -4,12 +4,13 @@ terraform {
     tfe         = "~> 0.15.1"
     google      = "~> 3.16.0"
     google-beta = "~> 3.16.0"
+    random      = "~> 2.2"
   }
   backend "remote" {}
 }
 
 locals {
-  gcp_project_name = "studygoose-prototype"
+  gcp_project_name = "studybeast-prod"
   gcp_region       = "us-central1"
   gcp_zone         = "us-central1-b"
   vpc_name         = "main-vpc"
@@ -35,7 +36,7 @@ module "vpc" {
   source = "../modules/vpc"
 
   name        = local.vpc_name
-  description = "The main StudyGoose VPC that holds all the instances"
+  description = "The main StudyBeast VPC that holds all the instances"
 }
 
 module "db" {

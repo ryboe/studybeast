@@ -5,7 +5,7 @@ variable "machine_type" {
 }
 
 variable "service_account_email" {
-  description = "The email address associated with the service account that the proxy will use, e.g. cloud-sql-proxy@studygoose-prototype.iam.gserviceaccount.com"
+  description = "The email address associated with the service account that the proxy will use, e.g. cloud-sql-proxy@my-project.iam.gserviceaccount.com"
   type        = string
 }
 

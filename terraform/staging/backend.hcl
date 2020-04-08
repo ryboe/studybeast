@@ -1,4 +1,4 @@
 organization = "jabronesoft"
 workspaces {
-  name = "terraform-cloud-studies-staging"
+  name = "studybeast-staging"
 }
