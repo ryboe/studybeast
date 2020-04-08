@@ -12,6 +12,7 @@ locals {
   gcp_project_name = "studygoose-prototype"
   gcp_region       = "us-central1"
   gcp_zone         = "us-central1-b"
+  vpc_name         = "main-vpc"
 }
 
 provider "google" {
@@ -33,7 +34,7 @@ module "vpc" {
   }
   source = "../modules/vpc"
 
-  name        = "main-vpc"
+  name        = local.vpc_name
   description = "The main StudyGoose VPC that holds all the instances"
 }
 
@@ -68,6 +69,6 @@ module "db" {
 
 #   machine_type          = "f1-micro"
 #   service_account_email = "${jsondecode(var.cloud_sql_proxy_service_account_key)["client_email"]}"
-#   subnet                = module.vpc.name
-#   zone                  = var.gcp_zone
+#   subnet                = local.vpc_name
+#   zone                  = local.gcp_zone
 # }
