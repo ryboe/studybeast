@@ -1,0 +1,16 @@
+{
+    "recommendations": [
+        "adpyke.vscode-sql-formatter",
+        "bodil.prettier-toml",
+        "bungcip.better-toml",
+        "foxundermoon.shell-format",
+        "matklad.rust-analyzer",
+        "mauve.terraform",
+        "mikestead.dotenv",
+        "ms-azuretools.vscode-docker",
+        "ms-ossdata.vscode-postgresql",
+        "redhat.vscode-yaml",
+        "serayuzgur.crates",
+        "vadimcn.vscode-lldb",
+    ]
+}
