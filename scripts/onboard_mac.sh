@@ -16,6 +16,8 @@ if [[ $(uname) != "Darwin" ]]; then
     exit 1
 fi
 
+# if ~/.cargo/bin isn't in the $PATH. That's where Rust binaries get installed
+# when you run `cargo install`.
 if [[ $PATH != *"/.cargo/bin:"* ]]; then
     # shellcheck disable=SC2016
     echo 'Please add ~/.cargo/bin to your $PATH and rerun the script.' # use a single-quoted string on purpose to avoid expanding $PATH
@@ -23,6 +25,7 @@ if [[ $PATH != *"/.cargo/bin:"* ]]; then
 fi
 
 # SSH KEYS
+# if the user doesn't have an ed25519 SSH key
 if [[ ! -f ~/.ssh/id_ed25519.pub ]]; then
     echo 'No ed25519 SSH key found. We will create this key and add it to the'
     echo 'macOS keychain so you can ssh into VMs.'
@@ -42,6 +45,7 @@ if [[ ! -f ~/.ssh/id_ed25519.pub ]]; then
 fi
 
 # BREW
+# if brew is not installed
 if [[ ! -x "$(command -v brew)" ]]; then
     echo 'Installing brew...'
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
