@@ -1,1 +1,1 @@
-# terraform-cloud-studies
+# StudyBeast

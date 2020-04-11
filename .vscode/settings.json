@@ -19,5 +19,8 @@
     },
     "[sql]": {
         "editor.defaultFormatter": "adpyke.vscode-sql-formatter"
+    },
+    "[terraform]": {
+        "editor.tabSize": 2
     }
 }

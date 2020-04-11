@@ -1,4 +1,4 @@
-organization = "jabronesoft"
+organization = "studybeast"
 workspaces {
-  name = "studybeast-prod"
+  name = "prod"
 }
