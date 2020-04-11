@@ -1,4 +1,4 @@
 organization = "studybeast"
 workspaces {
-  name = "prod"
+  name = "studybeast-prod"
 }
