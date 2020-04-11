@@ -82,9 +82,3 @@ resource "google_project" "project" {
   org_id              = local.gcp_org_id
   auto_create_network = false # don't create a default VPC. we'll manually create the VPC
 }
-
-
-# i need a TFE workspace first, to run the terraform commands remotely
-# then i need to create a GCP project
-# then i need to create a terraform service account with a JSON key
-# then i need to set the $GOOGLE_CREDENTIALS env var on the TFE workspace to that JSON string

@@ -59,9 +59,9 @@ brew bundle --file ../Brewfile
 echo ''
 echo 'Connecting the gcloud utility to your GCP account...'
 echo 'You will be prompted to log in to your StudyBeast Google account (e.g. ryan@studybeast.com)'
-vared -p 'Do you have a StudyBeast Google account? [Y/n]: ' -c has_google_account
+vared -p 'Do you have a StudyBeast Google account? [Y/n]: ' -c HAS_GOOGLE_ACCOUNT
 
-if [[ $has_google_account =~ ^[Nn] ]]; then
+if [[ $HAS_GOOGLE_ACCOUNT =~ ^[Nn] ]]; then
     echo 'Please ask an admin to create an account for you in the StudyBeast organization.'
     echo 'Then rerun this script.'
     exit 1
