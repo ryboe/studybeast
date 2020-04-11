@@ -50,7 +50,7 @@ module "db" {
   # instance_type = "db-custom-8-32768" # 8 cores, 32 GB RAM, min size to get max network bandwidth from google
   disk_size     = 10                  # TODO: use 1700 for prod
   instance_type = "db-f1-micro"       # TODO: use db-custom for prod
-  password      = var.api_db_password # this is a variable because it's a secret. it's stored here: https://app.terraform.io/app/jabronesoft/workspaces/terraform-cloud-studies/variables
+  password      = var.api_db_password # this is a variable because it's a secret. it's stored here: https://app.terraform.io/app/studybeast/workspaces/prod/variables
   user          = "api_user"
   vpc_name      = module.vpc.name
   vpc_uri       = module.vpc.uri
