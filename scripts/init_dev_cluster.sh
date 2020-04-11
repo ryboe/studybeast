@@ -7,8 +7,8 @@ read -r -t 600 -p "Is '$name' correct? [yN]: " reply
 
 # if reply doesn't start with a 'y' or 'Y'
 if [[ ! $reply =~ ^[yY] ]]; then
-    echo 'Goodbyte'
-    exit 1
+	echo 'Goodbye'
+	exit 1
 fi
 
 # Write the backend.hcl file to terraform/development/
