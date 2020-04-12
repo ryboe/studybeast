@@ -1,11 +1,11 @@
 
-variable "machine_type" {
-  description = "The type of VM you want, e.g. f1-micro, c2-standard-4"
+variable "db_instance_name" {
+  description = "The name of the Cloud SQL db, e.g. my-project:us-centra1:my-sql-db"
   type        = string
 }
 
-variable "service_account_email" {
-  description = "The email address associated with the service account that the proxy will use, e.g. cloud-sql-proxy@my-project.iam.gserviceaccount.com"
+variable "machine_type" {
+  description = "The type of VM you want, e.g. f1-micro, c2-standard-4"
   type        = string
 }
 

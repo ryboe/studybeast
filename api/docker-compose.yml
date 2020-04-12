@@ -63,16 +63,3 @@ services:
         'wal_compression=on', # default cloud sql value is 'off'. should be turned on
       ]
     # TODO: need to enable pg_stat_statements and uuid-ossp
-
-  cloud_sql_proxy:
-    image: gcr.io/cloudsql-docker/gce-proxy
-    ports:
-      - 5433:5433
-    volumes:
-      - '~/.config/gcloud/studygoose-prototype-9935da1bf05a.json:/config'
-    command:
-      [
-        '/cloud_sql_proxy',
-        '-credential_file=/config',
-        '-instances=studygoose-prototype:us-central1:main-primary=tcp:0.0.0.0:5433',
-      ]

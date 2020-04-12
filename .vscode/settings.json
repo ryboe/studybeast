@@ -13,6 +13,7 @@
     "pgsql.format.alignColumnDefinitionsInColumns": true,
     "pgsql.format.placeSelectStatementReferencesOnNewLine": true,
     "pgsql.intelliSense.lowerCaseSuggestions": true,
+    "terraform.lintConfig": "terraform/.tflint.hcl",
     "yaml.format.singleQuote": true,
     "[dockerfile]": {
         "editor.defaultFormatter": "ms-azuretools.vscode-docker"

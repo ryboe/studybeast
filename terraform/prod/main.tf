@@ -6,7 +6,12 @@ terraform {
     google-beta = "~> 3.16.0"
     random      = "~> 2.2"
   }
-  backend "remote" {}
+  backend "remote" {
+    organization = "studybeast-org"
+    workspaces {
+      name = "studybeast-prod"
+    }
+  }
 }
 
 locals {
@@ -65,11 +70,11 @@ module "db" {
   db_depends_on = module.vpc.private_vpc_connection
 }
 
-# module "dbproxy" {
-#   source = "../modules/dbproxy"
+module "dbproxy" {
+  source = "../modules/dbproxy"
 
-#   machine_type          = "f1-micro"
-#   service_account_email = "${jsondecode(var.cloud_sql_proxy_service_account_key)["client_email"]}"
-#   subnet                = local.vpc_name
-#   zone                  = local.gcp_zone
-# }
+  machine_type     = "f1-micro"
+  db_instance_name = module.db.connection_name # e.g. my-project:us-central1:my-db
+  subnet           = local.vpc_name
+  zone             = local.gcp_zone
+}

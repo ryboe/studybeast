@@ -21,7 +21,7 @@ PROJECT_ROOT=$(dirname "$SCRIPT_DIR")
 cd "$PROJECT_ROOT/terraform/development" || exit 1
 
 cat <<EOF >backend.hcl
-organization = "studybeast"
+organization = "studybeast-org"
 workspaces {
   name = "dev-$NAME"
 }

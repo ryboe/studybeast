@@ -23,10 +23,7 @@ resource "google_compute_instance" "db_proxy" {
     enable-oslogin = true
   }
 
-  # TODO: docker run whatever
-  # metadata_startup_script {
-
-  # }
+  metadata_startup_script = templatefile("${path.module}/run_cloud_sql_proxy.sh", { "db_instance_name" = var.db_instance_name })
 
   network_interface {
     subnetwork = var.subnet
@@ -43,7 +40,7 @@ resource "google_compute_instance" "db_proxy" {
   }
 
   service_account {
-    email = var.service_account_email
+    email = google_service_account.dbproxy.email
     # These are OAuth scopes for the various Google Cloud APIs. We're already
     # using IAM roles (specifically, Cloud SQL Editor) to control what this
     # instance can and cannot do. We don't need another layer of OAuth
@@ -52,8 +49,23 @@ resource "google_compute_instance" "db_proxy" {
     # access to all Google Cloud APIs through OAuth.
     scopes = ["cloud-platform"]
   }
+
+  provisioner "file" {
+    content     = base64decode(google_service_account_key.key.private_key)
+    destination = "/key.json"
+  }
 }
 
-// need to add network tag to instance
-// need to create firewall rule to allow SSH to instance
-// need to update terraform provider google to 3.16.0
+resource "google_service_account" "dbproxy" {
+  account_id  = "cloud-sql-proxy"
+  description = "The service account used by Cloud SQL Proxy to connect to the db"
+}
+
+resource "google_project_iam_member" "sql_editor_role" {
+  role   = "roles/cloudsql.editor"
+  member = "serviceAccount:${google_service_account.dbproxy.email}"
+}
+
+resource "google_service_account_key" "key" {
+  service_account_id = google_service_account.dbproxy.name
+}
