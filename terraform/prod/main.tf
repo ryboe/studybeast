@@ -75,6 +75,7 @@ module "dbproxy" {
 
   machine_type     = "f1-micro"
   db_instance_name = module.db.connection_name # e.g. my-project:us-central1:my-db
-  subnet           = local.vpc_name
+  region           = local.gcp_region
+  vpc_name         = local.vpc_name
   zone             = local.gcp_zone
 }

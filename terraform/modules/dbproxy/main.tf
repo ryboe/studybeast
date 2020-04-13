@@ -29,7 +29,8 @@ resource "google_compute_instance" "db_proxy" {
   # })
 
   network_interface {
-    subnetwork = var.subnet
+    network    = var.vpc_name
+    subnetwork = var.region
 
     # The access_config block must be set for the instance to have a public IP,
     # even if it's empty.

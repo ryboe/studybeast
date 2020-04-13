@@ -9,8 +9,13 @@ variable "machine_type" {
   type        = string
 }
 
-variable "subnet" {
-  description = "The name of the VPC subnet that the proxy instance will run in"
+variable "region" {
+  description = "The region that the proxy instance will run in (e.g. us-central1)"
+  type        = string
+}
+
+variable "vpc_name" {
+  description = "The name of the VPC that the proxy instance will run in"
   type        = string
 }
 
