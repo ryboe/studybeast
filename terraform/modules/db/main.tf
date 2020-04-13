@@ -16,7 +16,10 @@ resource "google_sql_database_instance" "main_primary" {
   # numbers, and hyphens.
   name             = "main-primary-${random_string.four_chars.result}"
   database_version = "POSTGRES_12"
-  depends_on       = [var.db_depends_on]
+  depends_on = [
+    var.db_depends_on,
+    google_project_service.enable_cloud_sql_admin_api
+  ]
 
   settings {
     tier              = var.instance_type
@@ -92,6 +95,22 @@ resource "google_sql_user" "db_user" {
   name     = var.user
   instance = google_sql_database_instance.main_primary.name
   password = var.password
+}
+
+resource "google_project_service" "enable_cloud_sql_admin_api" {
+  service                    = "sqladmin.googleapis.com"
+  disable_dependent_services = true
+
+  # terraform can't enable APIs without the Cloud Resource Manager API first
+  # being enabled.
+  depends_on = [
+    google_project_service.enable_cloud_resource_manager_api
+  ]
+}
+
+resource "google_project_service" "enable_cloud_resource_manager_api" {
+  service                    = "cloudresourcemanager.googleapis.com"
+  disable_dependent_services = true
 }
 
 # This is for appending a suffix to the database instance name. This name needs
