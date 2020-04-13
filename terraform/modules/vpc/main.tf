@@ -40,6 +40,10 @@ resource "google_service_networking_connection" "private_vpc_connection" {
 resource "google_project_service" "enable_iam_api" {
   service                    = "iam.googleapis.com"
   disable_dependent_services = true
+
+  depends_on = [
+    google_project_service.enable_cloud_resource_manager_api
+  ]
 }
 
 resource "google_project_service" "enable_cloud_resource_manager_api" {
