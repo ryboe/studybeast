@@ -57,8 +57,7 @@ resource "google_compute_instance" "db_proxy" {
 }
 
 resource "google_project_service" "enable_iam_api" {
-  service                    = "iam.googleapis.com"
-  disable_dependent_services = true
+  service = "iam.googleapis.com"
 
   # terraform can't enable APIs without the Cloud Resource Manager API first
   # being enabled.
@@ -68,19 +67,7 @@ resource "google_project_service" "enable_iam_api" {
 }
 
 resource "google_project_service" "enable_os_login_api" {
-  service                    = "oslogin.googleapis.com"
-  disable_dependent_services = true
-
-  # terraform can't enable APIs without the Cloud Resource Manager API first
-  # being enabled.
-  depends_on = [
-    google_project_service.enable_cloud_resource_manager_api
-  ]
-}
-
-resource "google_project_service" "enable_compute_engine_api" {
-  service                    = "compute.googleapis.com"
-  disable_dependent_services = true
+  service = "oslogin.googleapis.com"
 
   # terraform can't enable APIs without the Cloud Resource Manager API first
   # being enabled.
@@ -90,8 +77,7 @@ resource "google_project_service" "enable_compute_engine_api" {
 }
 
 resource "google_project_service" "enable_cloud_resource_manager_api" {
-  service                    = "cloudresourcemanager.googleapis.com"
-  disable_dependent_services = true
+  service = "cloudresourcemanager.googleapis.com"
 }
 
 resource "google_service_account" "dbproxy" {

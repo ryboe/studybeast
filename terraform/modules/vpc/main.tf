@@ -46,8 +46,7 @@ resource "google_service_networking_connection" "private_vpc_connection" {
 }
 
 resource "google_project_service" "enable_iam_api" {
-  service                    = "iam.googleapis.com"
-  disable_dependent_services = true
+  service = "iam.googleapis.com"
 
   depends_on = [
     google_project_service.enable_cloud_resource_manager_api
@@ -55,13 +54,11 @@ resource "google_project_service" "enable_iam_api" {
 }
 
 resource "google_project_service" "enable_cloud_resource_manager_api" {
-  service                    = "cloudresourcemanager.googleapis.com"
-  disable_dependent_services = true
+  service = "cloudresourcemanager.googleapis.com"
 }
 
 resource "google_project_service" "enable_compute_engine_api" {
-  service                    = "compute.googleapis.com"
-  disable_dependent_services = true
+  service = "compute.googleapis.com"
 
   # terraform can't enable APIs without the Cloud Resource Manager API first
   # being enabled.
@@ -71,8 +68,7 @@ resource "google_project_service" "enable_compute_engine_api" {
 }
 
 resource "google_project_service" "enable_service_networking_api" {
-  service                    = "servicenetworking.googleapis.com"
-  disable_dependent_services = true
+  service = "servicenetworking.googleapis.com"
 
   # terraform can't enable APIs without the Cloud Resource Manager API first
   # being enabled.
