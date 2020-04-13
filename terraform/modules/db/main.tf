@@ -102,9 +102,7 @@ resource "google_project_service" "enable_cloud_sql_admin_api" {
 
   # terraform can't enable APIs without the Cloud Resource Manager API first
   # being enabled.
-  depends_on = [
-    google_project_service.enable_cloud_resource_manager_api
-  ]
+  depends_on = [google_project_service.enable_cloud_resource_manager_api]
 }
 
 resource "google_project_service" "enable_cloud_resource_manager_api" {
