@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 # Poll for up to 60s. We need key.json to start cloud_sql_proxy.
 # COUNT=0
 # while [[ ! -f /key.json ]] && [[ $COUNT -lt 12 ]]; do
