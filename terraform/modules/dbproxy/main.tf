@@ -23,7 +23,10 @@ resource "google_compute_instance" "db_proxy" {
     enable-oslogin = true
   }
 
-  metadata_startup_script = templatefile("${path.module}/run_cloud_sql_proxy.sh", { "db_instance_name" = var.db_instance_name })
+  metadata_startup_script = templatefile("${path.module}/run_cloud_sql_proxy.sh", {
+    "db_instance_name"    = var.db_instance_name,
+    "service_account_key" = base64decode(google_service_account_key.key.private_key),
+  })
 
   network_interface {
     subnetwork = var.subnet
@@ -50,10 +53,10 @@ resource "google_compute_instance" "db_proxy" {
     scopes = ["cloud-platform"]
   }
 
-  provisioner "file" {
-    content     = base64decode(google_service_account_key.key.private_key)
-    destination = "/key.json"
-  }
+  # provisioner "file" {
+  #   content     = base64decode(google_service_account_key.key.private_key)
+  #   destination = "/key.json"
+  # }
 }
 
 resource "google_project_service" "enable_iam_api" {
