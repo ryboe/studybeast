@@ -50,3 +50,14 @@ resource "google_project_service" "enable_cloud_resource_manager_api" {
   service                    = "cloudresourcemanager.googleapis.com"
   disable_dependent_services = true
 }
+
+resource "google_project_service" "enable_compute_engine_api" {
+  service                    = "compute.googleapis.com"
+  disable_dependent_services = true
+
+  # terraform can't enable APIs without the Cloud Resource Manager API first
+  # being enabled.
+  depends_on = [
+    google_project_service.enable_cloud_resource_manager_api
+  ]
+}
