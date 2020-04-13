@@ -59,16 +59,6 @@ resource "google_compute_instance" "db_proxy" {
   # }
 }
 
-resource "google_project_service" "enable_os_login_api" {
-  service = "oslogin.googleapis.com"
-}
-
-resource "google_project_service" "enable_compute_api" {
-  service = "compute.googleapis.com"
-
-  depends_on = [google_project_service.enable_os_login_api]
-}
-
 resource "google_service_account" "dbproxy" {
   account_id  = "cloud-sql-proxy"
   description = "The service account used by Cloud SQL Proxy to connect to the db"
