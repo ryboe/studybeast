@@ -33,3 +33,4 @@ override.tf.json
 terraform/development/backend.hcl
 
 api/target
+.terraform/
