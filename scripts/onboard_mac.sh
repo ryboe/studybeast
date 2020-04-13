@@ -70,6 +70,12 @@ fi
 gcloud auth login
 gcloud compute os-login ssh-keys add --key-file ~/.ssh/id_ed25519.pub --ttl 365d
 
+# This is a bug in terraform-provider-google. Terraform can't enable the
+# Cloud Resources Manager API because the google_project_service resource
+# depends on it. See this issue for details:
+#   https://github.com/terraform-providers/terraform-provider-google/issues/6101
+gcloud services enable cloudresourcemanager.googleapis.com
+
 # RUST
 rustup target add x86_64-unknown-linux-musl
 cargo install cargo-audit cargo-make cargo-tomlfmt cargo-tree
