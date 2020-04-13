@@ -5,6 +5,8 @@ resource "google_compute_network" "vpc" {
   routing_mode            = "GLOBAL"
   auto_create_subnetworks = true
 
+  depends_on = [google_project_service.enable_iam_api]
+
   # lifecycle {
   #   prevent_destroy = true
   # }
@@ -33,4 +35,9 @@ resource "google_service_networking_connection" "private_vpc_connection" {
   network                 = google_compute_network.vpc.self_link
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_block.name]
+}
+
+resource "google_project_service" "enable_iam_api" {
+  service                    = "iam.googleapis.com"
+  disable_dependent_services = true
 }

@@ -69,6 +69,8 @@ resource "google_project_service" "enable_os_login_api" {
 resource "google_service_account" "dbproxy" {
   account_id  = "cloud-sql-proxy"
   description = "The service account used by Cloud SQL Proxy to connect to the db"
+
+  depends_on = [google_project_service.enable_iam_api]
 }
 
 resource "google_project_iam_member" "sql_editor_role" {
