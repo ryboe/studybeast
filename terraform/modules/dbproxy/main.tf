@@ -66,6 +66,11 @@ resource "google_project_service" "enable_os_login_api" {
   disable_dependent_services = true
 }
 
+resource "google_project_service" "enable_cloud_resource_manager_api" {
+  service                    = "cloudresourcemanager.googleapis.com"
+  disable_dependent_services = true
+}
+
 resource "google_service_account" "dbproxy" {
   account_id  = "cloud-sql-proxy"
   description = "The service account used by Cloud SQL Proxy to connect to the db"
