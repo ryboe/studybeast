@@ -59,31 +59,9 @@ resource "google_compute_instance" "db_proxy" {
   # }
 }
 
-resource "google_project_service" "enable_iam_api" {
-  service = "iam.googleapis.com"
-
-  # terraform can't enable APIs without the Cloud Resource Manager API first
-  # being enabled.
-  depends_on = [google_project_service.enable_cloud_resource_manager_api]
-}
-
-resource "google_project_service" "enable_os_login_api" {
-  service = "oslogin.googleapis.com"
-
-  # terraform can't enable APIs without the Cloud Resource Manager API first
-  # being enabled.
-  depends_on = [google_project_service.enable_cloud_resource_manager_api]
-}
-
-resource "google_project_service" "enable_cloud_resource_manager_api" {
-  service = "cloudresourcemanager.googleapis.com"
-}
-
 resource "google_service_account" "dbproxy" {
   account_id  = "cloud-sql-proxy"
   description = "The service account used by Cloud SQL Proxy to connect to the db"
-
-  depends_on = [google_project_service.enable_iam_api]
 }
 
 resource "google_project_iam_member" "sql_editor_role" {

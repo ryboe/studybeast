@@ -5,12 +5,6 @@ resource "google_compute_network" "vpc" {
   routing_mode            = "GLOBAL"
   auto_create_subnetworks = true
 
-  depends_on = [
-    google_project_service.enable_compute_engine_api,
-    google_project_service.enable_iam_api,
-    google_project_service.enable_service_networking_api,
-  ]
-
   # lifecycle {
   #   prevent_destroy = true
   # }
@@ -39,32 +33,4 @@ resource "google_service_networking_connection" "private_vpc_connection" {
   network                 = google_compute_network.vpc.self_link
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_block.name]
-
-  depends_on = [google_project_service.enable_service_networking_api]
-}
-
-resource "google_project_service" "enable_iam_api" {
-  service = "iam.googleapis.com"
-
-  depends_on = [google_project_service.enable_cloud_resource_manager_api]
-}
-
-resource "google_project_service" "enable_cloud_resource_manager_api" {
-  service = "cloudresourcemanager.googleapis.com"
-}
-
-resource "google_project_service" "enable_compute_engine_api" {
-  service = "compute.googleapis.com"
-
-  # terraform can't enable APIs without the Cloud Resource Manager API first
-  # being enabled.
-  depends_on = [google_project_service.enable_cloud_resource_manager_api]
-}
-
-resource "google_project_service" "enable_service_networking_api" {
-  service = "servicenetworking.googleapis.com"
-
-  # terraform can't enable APIs without the Cloud Resource Manager API first
-  # being enabled.
-  depends_on = [google_project_service.enable_cloud_resource_manager_api]
 }
