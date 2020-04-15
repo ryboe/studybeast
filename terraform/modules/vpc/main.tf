@@ -1,9 +1,10 @@
 
 resource "google_compute_network" "vpc" {
-  name                    = var.name
-  description             = var.description
-  routing_mode            = "GLOBAL"
-  auto_create_subnetworks = true
+  name                            = var.name
+  description                     = var.description
+  routing_mode                    = "GLOBAL"
+  auto_create_subnetworks         = true
+  delete_default_routes_on_create = true
 
   # lifecycle {
   #   prevent_destroy = true

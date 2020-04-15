@@ -1,4 +1,9 @@
 
+data "google_compute_subnetwork" "regional_subnet" {
+  name   = var.vpc_name
+  region = var.region
+}
+
 resource "google_compute_instance" "db_proxy" {
   name                      = "db-proxy"
   description               = <<-EOT
@@ -30,7 +35,7 @@ resource "google_compute_instance" "db_proxy" {
 
   network_interface {
     network    = var.vpc_name
-    subnetwork = var.region
+    subnetwork = data.google_compute_subnetwork.regional_subnet.self_link
 
     # The access_config block must be set for the instance to have a public IP,
     # even if it's empty.

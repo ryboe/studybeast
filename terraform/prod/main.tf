@@ -76,6 +76,10 @@ module "dbproxy" {
   machine_type     = "f1-micro"
   db_instance_name = module.db.connection_name # e.g. my-project:us-central1:my-db
   region           = local.gcp_region
-  vpc_name         = local.vpc_name
   zone             = local.gcp_zone
+
+  # Even though module.vpc.name is identical to local.vpc_name, passing
+  # module.vpc.name prevents the proxy from being created before the VPC. We
+  # can't create an proxy instance until we have a VPC to put it in.
+  vpc_name = module.vpc.name
 }
