@@ -28,10 +28,10 @@ resource "google_compute_instance" "db_proxy" {
     enable-oslogin = true
   }
 
-  # metadata_startup_script = templatefile("${path.module}/run_cloud_sql_proxy.sh", {
-  #   "db_instance_name"    = var.db_instance_name,
-  #   "service_account_key" = base64decode(google_service_account_key.key.private_key),
-  # })
+  metadata_startup_script = templatefile("${path.module}/run_cloud_sql_proxy.sh", {
+    "db_instance_name"    = var.db_instance_name,
+    "service_account_key" = base64decode(google_service_account_key.key.private_key),
+  })
 
   network_interface {
     network    = var.vpc_name
@@ -65,6 +65,7 @@ resource "google_compute_instance" "db_proxy" {
   # }
 }
 
+# TODO: turn these three resources into a service account module
 resource "google_service_account" "dbproxy" {
   account_id  = "cloud-sql-proxy"
   description = "The service account used by Cloud SQL Proxy to connect to the db"
