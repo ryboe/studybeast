@@ -30,11 +30,10 @@ resource "google_compute_instance" "db_proxy" {
     enable-oslogin = "TRUE"
   }
 
-  # TODO: enable
-  # metadata_startup_script = templatefile("${path.module}/run_cloud_sql_proxy.sh", {
-  #   "db_instance_name"    = var.db_instance_name,
-  #   "service_account_key" = module.serviceaccount.private_key,
-  # })
+  metadata_startup_script = templatefile("${path.module}/run_cloud_sql_proxy.sh", {
+    "db_instance_name"    = var.db_instance_name,
+    "service_account_key" = module.serviceaccount.private_key,
+  })
 
   network_interface {
     network    = var.vpc_name
