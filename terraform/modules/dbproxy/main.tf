@@ -16,6 +16,8 @@ resource "google_compute_instance" "db_proxy" {
   desired_status            = "RUNNING"
   allow_stopping_for_update = true
 
+  tags = ["ssh-enabled"]
+
   boot_disk {
     initialize_params {
       image = "cos-cloud/cos-stable"
@@ -60,10 +62,25 @@ resource "google_compute_instance" "db_proxy" {
     scopes = ["cloud-platform"]
   }
 
+  # TODO: delete this
   # provisioner "file" {
   #   content     = base64decode(google_service_account_key.key.private_key)
   #   destination = "/key.json"
   # }
+}
+
+resource "google_compute_firewall" "allow_ssh" {
+  name        = "allow-ssh"
+  description = "Allow SSH traffic to any instance with the network tag 'ssh-enabled'"
+  network     = var.vpc_name
+  direction   = "INGRESS"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  target_tags = ["ssh-enabled"]
 }
 
 module "serviceaccount" {

@@ -4,7 +4,6 @@ resource "google_compute_network" "vpc" {
   description             = var.description
   routing_mode            = "GLOBAL"
   auto_create_subnetworks = true
-  # delete_default_routes_on_create = true
 
   # lifecycle {
   #   prevent_destroy = true
@@ -34,4 +33,18 @@ resource "google_service_networking_connection" "private_vpc_connection" {
   network                 = google_compute_network.vpc.self_link
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_block.name]
+}
+
+resource "google_compute_firewall" "allow_ssh" {
+  name        = "allow-ssh"
+  description = "Allow SSH traffic to any instance with the network tag 'ssh-enabled'"
+  network     = google_compute_network.vpc.name
+  direction   = "INGRESS"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  target_tags = ["ssh-enabled"]
 }
