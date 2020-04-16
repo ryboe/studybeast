@@ -15,9 +15,7 @@ set -euxo pipefail
 # fi
 
 echo "${service_account_key}" >/tmp/svc_account_key.json
-ls -lh /tmp
-
-chmod 444 /tmp/svc_account_key.json
+chmod 400 /tmp/svc_account_key.json
 
 cat /tmp/svc_account_key.json
 
