@@ -15,7 +15,11 @@ set -euxo pipefail
 # fi
 
 echo "${service_account_key}" >/tmp/svc_account_key.json
+ls -lh /tmp
+
 chmod 444 /tmp/svc_account_key.json
+
+cat /tmp/svc_account_key.json
 
 # -p 127.0.0.1:5432:3306       -- cloud_sql_proxy exposes port 3306 on the container, even for Postgres.
 #                                 We map 3306 in the container to 5432 on the host. '127.0.0.1' means
