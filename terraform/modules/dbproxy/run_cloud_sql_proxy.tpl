@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euxo pipefail
+set -euo pipefail
 
 # We write the key to /var because it's one of the few directories that A) is
 # writeable, and B) persists between reboots. B is important because GCP will
@@ -8,7 +8,7 @@ set -euxo pipefail
 echo '${service_account_key}' >/var/svc_account_key.json
 chmod 400 /var/svc_account_key.json
 
-docker pull postgres:12.1-alpine # for running psql client
+# TODO: delete this line and add the `--pull=always` flag to `docker run`
 docker pull gcr.io/cloudsql-docker/gce-proxy:latest
 
 # -p 127.0.0.1:5432:3306 -- cloud_sql_proxy exposes port 3306 on the container, even for Postgres.
