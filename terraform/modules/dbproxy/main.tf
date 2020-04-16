@@ -30,23 +30,22 @@ resource "google_compute_instance" "db_proxy" {
     enable-oslogin = "TRUE"
   }
 
-  metadata_startup_script = <<-EOT
-    #!/bin/bash
-    set -euxo pipefail
+  # metadata_startup_script = <<-EOT
+  #   #!/bin/bash
+  #   set -euxo pipefail
 
-    printf "${base64decode(module.serviceaccount.base64_encoded_private_key)}" >/tmp/svc_account_key.json
-    chmod 400 /tmp/svc_account_key.json
-    cat /tmp/svc_account_key.json
+  #   echo '${module.serviceaccount.private_key}' >/tmp/svc_account_key.json
+  #   chmod 400 /tmp/svc_account_key.json
+  #   cat /tmp/svc_account_key.json
 
-    docker pull gcr.io/cloudsql-docker/gce-proxy:latest
-    docker run --rm -p 127.0.0.1:5432:3306 -v /tmp/svc_account_key.json:/key.json:ro gcr.io/cloudsql-docker/gce-proxy:latest /cloud_sql_proxy -credential_file=/key.json -ip_address_types=PRIVATE -instances=${var.db_instance_name}=tcp:0.0.0.0:3306
-  EOT
+  #   docker pull gcr.io/cloudsql-docker/gce-proxy:latest
+  #   docker run --rm -p 127.0.0.1:5432:3306 -v /tmp/svc_account_key.json:/key.json:ro gcr.io/cloudsql-docker/gce-proxy:latest /cloud_sql_proxy -credential_file=/key.json -ip_address_types=PRIVATE -instances=${var.db_instance_name}=tcp:0.0.0.0:3306
+  # EOT
 
-
-  # templatefile("${path.module}/run_cloud_sql_proxy.sh", {
-  #   "db_instance_name"    = var.db_instance_name,
-  #   "service_account_key" = module.serviceaccount.private_key,
-  # })
+  metadata_startup_script = templatefile("${path.module}/run_cloud_sql_proxy.tpl", {
+    "db_instance_name"    = var.db_instance_name,
+    "service_account_key" = module.serviceaccount.private_key,
+  })
 
   network_interface {
     network    = var.vpc_name
