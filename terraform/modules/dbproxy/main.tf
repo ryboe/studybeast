@@ -28,10 +28,11 @@ resource "google_compute_instance" "db_proxy" {
     enable-oslogin = true
   }
 
-  metadata_startup_script = templatefile("${path.module}/run_cloud_sql_proxy.sh", {
-    "db_instance_name"    = var.db_instance_name,
-    "service_account_key" = base64decode(google_service_account_key.key.private_key),
-  })
+  # TODO: enable
+  # metadata_startup_script = templatefile("${path.module}/run_cloud_sql_proxy.sh", {
+  #   "db_instance_name"    = var.db_instance_name,
+  #   "service_account_key" = module.serviceaccount.private_key,
+  # })
 
   network_interface {
     network    = var.vpc_name
@@ -49,7 +50,7 @@ resource "google_compute_instance" "db_proxy" {
   }
 
   service_account {
-    email = google_service_account.dbproxy.email
+    email = module.serviceaccount.email
     # These are OAuth scopes for the various Google Cloud APIs. We're already
     # using IAM roles (specifically, Cloud SQL Editor) to control what this
     # instance can and cannot do. We don't need another layer of OAuth
@@ -65,17 +66,9 @@ resource "google_compute_instance" "db_proxy" {
   # }
 }
 
-# TODO: turn these three resources into a service account module
-resource "google_service_account" "dbproxy" {
-  account_id  = "cloud-sql-proxy"
-  description = "The service account used by Cloud SQL Proxy to connect to the db"
-}
+module "serviceaccount" {
+  source = "../serviceaccount"
 
-resource "google_project_iam_member" "sql_editor_role" {
-  role   = "roles/cloudsql.editor"
-  member = "serviceAccount:${google_service_account.dbproxy.email}"
-}
-
-resource "google_service_account_key" "key" {
-  service_account_id = google_service_account.dbproxy.name
+  name = "cloud-sql-proxy"
+  role = "roles/cloudsql.editor"
 }
