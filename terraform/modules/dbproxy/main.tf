@@ -25,7 +25,7 @@ resource "google_compute_instance" "db_proxy" {
   }
 
   metadata = {
-    enable-oslogin = true
+    enable-oslogin = "TRUE"
   }
 
   # TODO: enable
