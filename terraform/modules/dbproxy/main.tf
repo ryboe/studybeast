@@ -69,20 +69,6 @@ resource "google_compute_instance" "db_proxy" {
   # }
 }
 
-resource "google_compute_firewall" "allow_ssh" {
-  name        = "allow-ssh"
-  description = "Allow SSH traffic to any instance with the network tag 'ssh-enabled'"
-  network     = var.vpc_name
-  direction   = "INGRESS"
-
-  allow {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-
-  target_tags = ["ssh-enabled"]
-}
-
 module "serviceaccount" {
   source = "../serviceaccount"
 
