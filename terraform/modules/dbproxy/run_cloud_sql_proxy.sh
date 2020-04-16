@@ -1,6 +1,5 @@
 #!/bin/bash
-
-set -x
+set -euxo pipefail
 
 # Poll for up to 60s. We need key.json to start cloud_sql_proxy.
 # COUNT=0
@@ -15,8 +14,8 @@ set -x
 #     exit 1
 # fi
 
-echo "${service_account_key}" >key.json
-chmod 400 key.json
+echo "${service_account_key}" >/key.json
+chmod 444 key.json
 
 # -p 127.0.0.1:5432:3306    -- cloud_sql_proxy exposes port 3306 on the container, even for Postgres.
 #                              We map 3306 in the container to 5432 on the host. '127.0.0.1' means
@@ -27,4 +26,5 @@ chmod 400 key.json
 # -ip_address_types=PRIVATE -- The proxy should only try to connect to the db's private IP.
 # -instances=${db_instance_name}=tcp:0.0.0.0:3306 -- The instance name will be something like 'my-project:us-central1:my-db'.
 #                                                    The proxy should accept incoming TCP connections on port 3306.
+docker pull gcr.io/cloudsql-docker/gce-proxy:latest
 docker run --rm -p 127.0.0.1:5432:3306 -v key.json:/key.json:ro gcr.io/cloudsql-docker/gce-proxy:latest /cloud_sql_proxy -credential_file=/key.json -ip_address_types=PRIVATE -instances=${db_instance_name}=tcp:0.0.0.0:3306
