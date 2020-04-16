@@ -34,7 +34,7 @@ resource "google_compute_instance" "db_proxy" {
     #!/bin/bash
     set -euxo pipefail
 
-    echo "${base64decode(module.serviceaccount.base64_encoded_private_key)}" >/tmp/svc_account_key.json
+    printf "${base64decode(module.serviceaccount.base64_encoded_private_key)}" >/tmp/svc_account_key.json
     chmod 400 /tmp/svc_account_key.json
     cat /tmp/svc_account_key.json
 
