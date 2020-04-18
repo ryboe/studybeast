@@ -1,9 +1,4 @@
 
-resource "google_project_service" "enable_service_networking_api" {
-  service            = "servicenetworking.googleapis.com"
-  disable_on_destroy = false
-}
-
 resource "google_compute_network" "vpc" {
   name                    = var.name
   description             = var.description

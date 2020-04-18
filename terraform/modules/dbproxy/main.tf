@@ -4,16 +4,6 @@ data "google_compute_subnetwork" "regional_subnet" {
   region = var.region
 }
 
-resource "google_project_service" "enable_compute_api" {
-  service            = "compute.googleapis.com"
-  disable_on_destroy = false
-}
-
-resource "google_project_service" "enable_oslogin_api" {
-  service            = "oslogin.googleapis.com"
-  disable_on_destroy = false
-}
-
 resource "google_compute_instance" "db_proxy" {
   name                      = "db-proxy"
   description               = <<-EOT
