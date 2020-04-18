@@ -4,7 +4,7 @@ terraform {
     tfe         = "~> 0.15.1"
     google      = "~> 3.17.0"
     google-beta = "~> 3.17.0"
-    random      = "~> 2.2"
+    random      = "~> 2.2.1"
   }
   backend "remote" {
     organization = "studybeast-org"

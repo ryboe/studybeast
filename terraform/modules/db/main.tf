@@ -1,11 +1,12 @@
 
+resource "google_project_service" "enable_sqladmin_api" {
+  service            = "sqladmin.googleapis.com"
+  disable_on_destroy = false
+}
+
 resource "google_sql_database" "main" {
   name     = "main"
   instance = google_sql_database_instance.main_primary.name
-
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
 }
 
 resource "google_sql_database_instance" "main_primary" {
@@ -13,10 +14,12 @@ resource "google_sql_database_instance" "main_primary" {
   # recently deleted instance. After an instance is destroyed, the name can't be
   # reused for up to a week. 4 chars = 1.6 million possible IDs
   # We use random_string because the name can only container lowercase letters,
-  # numbers, and hyphens.
+  # numbers, and hyphens. random_string lets you restrict the kinds of chars in
+  # the charset.
   name             = "main-primary-${random_string.four_chars.result}"
   database_version = "POSTGRES_12"
-  depends_on       = [var.db_depends_on]
+
+  depends_on = [var.db_depends_on]
 
   settings {
     tier              = var.instance_type

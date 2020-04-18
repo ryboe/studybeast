@@ -4,6 +4,16 @@ data "google_compute_subnetwork" "regional_subnet" {
   region = var.region
 }
 
+resource "google_project_service" "enable_compute_api" {
+  service            = "compute.googleapis.com"
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "enable_oslogin_api" {
+  service            = "oslogin.googleapis.com"
+  disable_on_destroy = false
+}
+
 resource "google_compute_instance" "db_proxy" {
   name                      = "db-proxy"
   description               = <<-EOT
@@ -29,18 +39,6 @@ resource "google_compute_instance" "db_proxy" {
   metadata = {
     enable-oslogin = "TRUE"
   }
-
-  # metadata_startup_script = <<-EOT
-  #   #!/bin/bash
-  #   set -euxo pipefail
-
-  #   echo '${module.serviceaccount.private_key}' >/tmp/svc_account_key.json
-  #   chmod 400 /tmp/svc_account_key.json
-  #   cat /tmp/svc_account_key.json
-
-  #   docker pull gcr.io/cloudsql-docker/gce-proxy:latest
-  #   docker run --rm -p 127.0.0.1:5432:3306 -v /tmp/svc_account_key.json:/key.json:ro gcr.io/cloudsql-docker/gce-proxy:latest /cloud_sql_proxy -credential_file=/key.json -ip_address_types=PRIVATE -instances=${var.db_instance_name}=tcp:0.0.0.0:3306
-  # EOT
 
   metadata_startup_script = templatefile("${path.module}/run_cloud_sql_proxy.tpl", {
     "db_instance_name"    = var.db_instance_name,
@@ -72,12 +70,6 @@ resource "google_compute_instance" "db_proxy" {
     # access to all Google Cloud APIs through OAuth.
     scopes = ["cloud-platform"]
   }
-
-  # TODO: delete this
-  # provisioner "file" {
-  #   content     = base64decode(google_service_account_key.key.private_key)
-  #   destination = "/key.json"
-  # }
 }
 
 module "serviceaccount" {
