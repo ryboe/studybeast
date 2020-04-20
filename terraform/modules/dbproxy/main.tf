@@ -1,8 +1,8 @@
 
-# data "google_compute_subnetwork" "regional_subnet" {
-#   name   = var.vpc_name
-#   region = var.region
-# }
+data "google_compute_subnetwork" "regional_subnet" {
+  name   = var.vpc_name
+  region = var.region
+}
 
 resource "google_compute_instance" "db_proxy" {
   name                      = "db-proxy"
