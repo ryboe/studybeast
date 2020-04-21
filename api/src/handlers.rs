@@ -34,7 +34,7 @@ pub async fn graphql_handler(
 }
 
 pub async fn graphiql_handler() -> impl Responder {
-    let body = graphiql_source("/graphql");
+    let body = graphiql_source("/graphql", None);
     HttpResponse::Ok()
         .content_type("text/html; charset=UTF-8")
         .body(body)
