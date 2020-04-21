@@ -11,6 +11,7 @@
         "ms-ossdata.vscode-postgresql",
         "redhat.vscode-yaml",
         "serayuzgur.crates",
+        "sharat.vscode-brewfile",
         "vadimcn.vscode-lldb",
     ]
 }

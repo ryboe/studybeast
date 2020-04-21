@@ -1,5 +1,4 @@
-#!/bin/zsh
-
+#!/usr/bin/env zsh
 set -euo pipefail
 
 press_any_key_to_continue() {
@@ -52,8 +51,9 @@ if [[ ! -x "$(command -v brew)" ]]; then
 fi
 
 echo 'Installing brew packages...'
+SCRIPT_PATH=$0:A
 brew update
-brew bundle --file ../Brewfile
+brew bundle --file $SCRIPT_PATH/../Brewfile
 
 # GCLOUD
 echo ''
@@ -70,14 +70,7 @@ fi
 gcloud auth login
 gcloud compute os-login ssh-keys add --key-file ~/.ssh/id_ed25519.pub --ttl 365d
 
-# This is a bug in terraform-provider-google. Terraform can't enable the
-# Cloud Resources Manager API because the google_project_service resource
-# depends on it. See this issue for details:
-#   https://github.com/terraform-providers/terraform-provider-google/issues/6101
-gcloud services enable cloudresourcemanager.googleapis.com
-
 # RUST
-rustup target add x86_64-unknown-linux-musl
 cargo install cargo-audit cargo-make cargo-tomlfmt cargo-tree
 
 # WRAPPING UP

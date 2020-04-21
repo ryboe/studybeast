@@ -1,4 +1,0 @@
-FROM alpine
-COPY target/debug/studybeast-api /usr/local/bin/studybeast-api
-EXPOSE 8080
-CMD ["studybeast-api"]

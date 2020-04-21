@@ -10,6 +10,5 @@ brew 'shfmt' # formatting bash scripts
 brew 'terraform'
 brew 'terraform-docs' # generate markdown and HTML docs from terraform files
 brew 'tflint' # lint terraform files
-brew 'FiloSottile/musl-cross/musl-cross' # for cross-compiling linux binaries on mac
 
 cask 'google-cloud-sdk' # gcloud

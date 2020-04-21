@@ -1,15 +1,5 @@
-[tasks.build]
-dependencies = ["build-api-bin"]
-command = "docker"
-args = [
-    "build",
-    "-t",
-    "studybeast-api:latest",
-    "--file",
-    "dockerfiles/Dockerfile.dev",
-    "."
-]
+default_task_name = "build"
 
-[tasks.build-api-bin]
+[tasks.build]
 command = "cargo"
 args = ["build"]
