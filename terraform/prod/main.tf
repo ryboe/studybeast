@@ -1,10 +1,11 @@
 terraform {
   required_version = "~> 0.12.24"
   required_providers {
-    tfe         = "~> 0.16.0"
+    docker      = "~> 2.7.0"
     google      = "~> 3.17.0"
     google-beta = "~> 3.17.0"
     random      = "~> 2.2.1"
+    tfe         = "~> 0.16.0"
   }
   backend "remote" {
     organization = "studybeast-org"
