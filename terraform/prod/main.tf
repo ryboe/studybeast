@@ -53,9 +53,9 @@ module "db" {
 
   # disk_size = 1700 # minimum GB to get max IOPS
   # instance_type = "db-custom-8-32768" # 8 cores, 32 GB RAM, min size to get max network bandwidth from google
-  disk_size     = 10                  # TODO: use 1700 for prod
-  instance_type = "db-f1-micro"       # TODO: use db-custom for prod
-  password      = var.api_db_password # this is a variable because it's a secret. it's stored here: https://app.terraform.io/app/studybeast/workspaces/prod/variables
+  disk_size     = 10                    # TODO: use 1700 for prod
+  instance_type = "db-f1-micro"         # TODO: use db-custom for prod
+  password      = var.proxy_db_password # this is a variable because it's a secret. it's stored here: https://app.terraform.io/app/studybeast/workspaces/prod/variables
   user          = "api_user"
   vpc_name      = module.vpc.name
   vpc_uri       = module.vpc.uri
@@ -83,3 +83,14 @@ module "dbproxy" {
   # can't create an proxy instance until we have a VPC to put it in.
   vpc_name = module.vpc.name
 }
+
+module "api" {
+  source = "../modules/api"
+
+  region       = "us-central1"
+  db_name      = module.db.name
+  db_password  = var.api_db_password
+  project_name = local.gcp_project_name
+}
+
+resource "google_container_registry" "main" {}

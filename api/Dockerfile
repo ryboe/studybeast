@@ -6,6 +6,7 @@ COPY . .
 RUN cargo build --release
 
 FROM gcr.io/distroless/cc
+LABEL maintainer "ryan@studybeast.com"
 ENV STAGE "production"
 COPY --from=builder /usr/src/api/target/release/studybeast-api /
 EXPOSE 8080

@@ -91,7 +91,7 @@ resource "google_sql_database_instance" "main_primary" {
   }
 }
 
-resource "google_sql_user" "db_user" {
+resource "google_sql_user" "proxy_user" {
   name     = var.user
   instance = google_sql_database_instance.main_primary.name
   password = var.password
