@@ -17,7 +17,7 @@ use std::sync::Arc;
 #[actix_rt::main]
 async fn main() -> io::Result<()> {
     let cfg = Config::from_env().expect("failed to read env vars");
-    let host_port = format!("{}:{}", cfg.host, cfg.port);
+    let host_port = format!("127.0.0.1:{}", cfg.port);
     let graphql_schema = Arc::new(create_schema());
 
     // TODO: replace with proper logging

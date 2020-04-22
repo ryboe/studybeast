@@ -1,5 +1,10 @@
 // api module
 
+variable "api_depends_on" {
+  description = "A single resource that the API Cloud Run service depends on (i.e. the container registry)"
+  type        = any
+}
+
 variable "db_name" {
   description = "The name of the database that the API will connect to"
   type        = string

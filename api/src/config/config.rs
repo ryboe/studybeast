@@ -9,7 +9,6 @@ use std::path::Path;
 #[derivative(Debug)]
 pub struct Config {
     pub stage: Stage,
-    pub host: String,
     pub port: u16,
     // db API creds
     // #[derivative(Debug="ignore")]
@@ -27,10 +26,9 @@ impl Config {
             let _ = dotenv::from_path(env_file_path)?;
         }
 
-        let host = env::var("HOST")?;
         let port: u16 = env::var("PORT")?.parse()?;
 
-        let cfg = Config { stage, host, port };
+        let cfg = Config { stage, port };
         Ok(cfg)
     }
 }

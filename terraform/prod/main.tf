@@ -87,10 +87,16 @@ module "dbproxy" {
 module "api" {
   source = "../modules/api"
 
-  region       = "us-central1"
-  db_name      = module.db.name
-  db_password  = var.api_db_password
-  project_name = local.gcp_project_name
+  api_depends_on = google_container_registry.main
+  region         = "us-central1"
+  db_name        = module.db.name
+  db_password    = var.api_db_password
+  project_name   = local.gcp_project_name
 }
 
-resource "google_container_registry" "main" {}
+resource "google_container_registry" "main" {
+  provisioner "local-exec" {
+    working_dir = "../../api"
+    command     = "docker build -t gcr.io/studybeast-prod/api ."
+  }
+}

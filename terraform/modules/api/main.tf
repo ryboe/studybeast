@@ -1,8 +1,9 @@
 // api module
 
 resource "google_cloud_run_service" "api" {
-  name     = "studybeast-api"
-  location = var.region
+  name       = "studybeast-api"
+  location   = var.region
+  depends_on = [var.api_depends_on]
 
   traffic {
     percent         = var.traffic_percent
