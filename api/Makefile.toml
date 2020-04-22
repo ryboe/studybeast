@@ -1,5 +1,5 @@
-default_task_name = "build"
-
-[tasks.build]
+# default_task_name = "build"
+[tasks.run]
+env = { STAGE = "development" }
 command = "cargo"
-args = ["build"]
+args = ["run"]
