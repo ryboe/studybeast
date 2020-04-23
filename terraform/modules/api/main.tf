@@ -3,7 +3,7 @@
 resource "google_cloud_run_service" "api" {
   name       = "studybeast-api"
   location   = var.region
-  depends_on = [var.api_depends_on]
+  depends_on = [var.container_registry_link]
 
   traffic {
     percent         = var.traffic_percent
@@ -53,4 +53,10 @@ resource "google_sql_user" "api_user" {
   name     = "api_user"
   instance = var.db_name
   password = var.db_password
+
+  # api_sql_user_depends_on is the same value as db_name. Passing the same value
+  # twice is dumb, but we have to be explicit about the dependency with
+  # depends_on, otherwise terraform will not teardown the cluster cleanly. This
+  # is probably a bug in the terraform-cloud-google provider.
+  depends_on = [var.api_sql_user_depends_on]
 }

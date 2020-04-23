@@ -88,11 +88,16 @@ module "dbproxy" {
 module "api" {
   source = "../modules/api"
 
-  api_depends_on = google_container_registry.main
-  region         = "us-central1"
-  db_name        = module.db.name
-  db_password    = var.api_db_password
-  project_name   = local.gcp_project_name
+  container_registry_link = google_container_registry.main
+  region                  = "us-central1"
+  db_name                 = module.db.name
+  db_password             = var.api_db_password
+  project_name            = local.gcp_project_name
+
+  # Terraform won't tear down the api module cleanly unless we explicitly state
+  # the 'api_user' Postgres user depends_on the db resource. Passing the db name
+  # as db_name is not enough. google_sql_user must depend_on the db name.
+  api_sql_user_depends_on = module.db.name
 }
 
 resource "google_container_registry" "main" {

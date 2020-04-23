@@ -1,7 +1,12 @@
 // api module
 
-variable "api_depends_on" {
-  description = "A single resource that the API Cloud Run service depends on (i.e. the container registry)"
+variable "api_sql_user_depends_on" {
+  description = "A single resource that the API depends on"
+  type        = any
+}
+
+variable "container_registry_link" {
+  description = "The registry that Cloud Run will pull the API image from"
   type        = any
 }
 
