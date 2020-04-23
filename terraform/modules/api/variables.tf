@@ -1,10 +1,5 @@
 // api module
 
-variable "api_sql_user_depends_on" {
-  description = "A single resource that the API depends on"
-  type        = any
-}
-
 variable "container_registry_link" {
   description = "The registry that Cloud Run will pull the API image from"
   type        = any
@@ -17,6 +12,16 @@ variable "db_name" {
 
 variable "db_password" {
   description = "The db password the API will use to connect to the db"
+  type        = string
+}
+
+variable "domain" {
+  description = "The domain under which the API image will run, e.g. 'ryanboehning.com' from 'api.ryanboehning.com'"
+  type        = string
+}
+
+variable "image" {
+  description = "The API container image you want to deploy, e.g. gcr.io/studybeast-prod/api"
   type        = string
 }
 

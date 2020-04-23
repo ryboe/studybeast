@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "This script needs a rewrite"
+exit 1
+
 read -r -t 600 -p "Please enter your name from your company email address (e.g. 'ryan' from 'ryan@studybeast.com'): " NAME
 NAME=$(echo "$NAME" | tr '[:upper:]' '[:lower:]') # lowercase the name
 
@@ -37,7 +40,9 @@ echo "  https://app.terraform.io/studybeast/workspaces/dev-$NAME/settings"
 echo ""
 echo "Add this environment variable, which you should get from a TFC admin."
 echo ""
-echo "  GOOGLE_CREDENTIALS=<full JSON from terraform service account key>"
+echo "  GOOGLE_CREDENTIALS=<minified JSON from terraform service account key>"
 echo ""
 echo "Then you can create a cluster by running terraform apply from within the"
 echo "terraform/development directory."
+
+source init_cluster.sh

@@ -52,7 +52,6 @@ fi
 
 echo 'Installing brew packages...'
 SCRIPT_PATH=$0:A
-brew update
 brew bundle --file $SCRIPT_PATH/../Brewfile
 
 # GCLOUD
@@ -67,7 +66,7 @@ if [[ $HAS_GOOGLE_ACCOUNT =~ ^[Nn] ]]; then
     exit 1
 fi
 
-gcloud auth login
+gcloud init
 gcloud compute os-login ssh-keys add --key-file ~/.ssh/id_ed25519.pub --ttl 365d
 
 # RUST
