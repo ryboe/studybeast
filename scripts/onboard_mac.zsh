@@ -17,9 +17,23 @@ fi
 
 # if ~/.cargo/bin isn't in the $PATH. That's where Rust binaries get installed
 # when you run `cargo install`.
-if [[ $PATH != *"/.cargo/bin:"* ]]; then
+if [[ $PATH != *".cargo/bin:"* ]]; then
     # shellcheck disable=SC2016
     echo 'Please add ~/.cargo/bin to your $PATH and rerun the script.' # use a single-quoted string on purpose to avoid expanding $PATH
+    exit 1
+fi
+
+if [[ -z "$GCP_PROJECT_ID" ]]; then
+    echo '$GCP_PROJECT_ID is not set.'
+    echo 'Please ask an admin to create a GCP user account and a dev project for you in the StudyBeast organization.'
+    echo 'Set $GCP_PROJECT_ID in your shell config to something like this'
+    echo ''
+    echo '  export GCP_PROJECT_ID="studybeast-dev-ryan-boehning"'
+    echo ''
+    echo 'Our deployment scripts need this env var to know where to deploy your personal development cluster.'
+    echo 'This cluster is your own StudyBeast sandbox, for developing and testing your branches.'
+    echo ''
+    echo 'When the env var is set, please rerun this script.'
     exit 1
 fi
 
@@ -31,14 +45,16 @@ if [[ ! -f ~/.ssh/id_ed25519.pub ]]; then
     echo 'Generating ed25519 key...'
     ssh-keygen -t ed25519
     ssh-add -K ~/.ssh/id_ed25519 # add the new key to the macOS keychain
-    echo ''
-    echo 'An ed25519 SSH key has been generated and added to the macOS keychain.'
-    echo 'Please add these lines to your ~/.ssh/config file and rerun this script.'
+
+    echo 'Please add these lines to your ~/.ssh/config file and rerun this script'
     echo ''
     echo 'Host *'
     echo '    AddKeysToAgent yes'
-    echo '    UseKeychain yes'
+    echo '    ControlMaster auto'
+    echo '    ControlPath ~/.ssh/sockets/%r@%h:%p'
+    echo '    ControlPersist 600'
     echo '    IdentityFile ~/.ssh/id_ed25519'
+    echo '    UseKeychain yes'
     echo ''
     exit 1
 fi
@@ -50,32 +66,26 @@ if [[ ! -x "$(command -v brew)" ]]; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 fi
 
+echo ''
 echo 'Installing brew packages...'
 SCRIPT_PATH=$0:A
-brew bundle --file $SCRIPT_PATH/../Brewfile
+brew bundle --no-lock --file $SCRIPT_PATH/../Brewfile
 
 # GCLOUD
 echo ''
 echo 'Connecting the gcloud utility to your GCP account...'
-echo 'You will be prompted to log in to your StudyBeast Google account (e.g. ryan@studybeast.com)'
-vared -p 'Do you have a StudyBeast Google account? [Y/n]: ' -c HAS_GOOGLE_ACCOUNT
-
-if [[ $HAS_GOOGLE_ACCOUNT =~ ^[Nn] ]]; then
-    echo 'Please ask an admin to create an account for you in the StudyBeast organization.'
-    echo 'Then rerun this script.'
-    exit 1
-fi
 
 gcloud init
 gcloud compute os-login ssh-keys add --key-file ~/.ssh/id_ed25519.pub --ttl 365d
 
 # RUST
-cargo install cargo-audit cargo-make cargo-tomlfmt cargo-tree
+cargo install cargo-audit cargo-expand cargo-make cargo-tomlfmt cargo-tree cargo-udeps
 
-# WRAPPING UP
+# DOCKER DESKTOP
 echo ''
-echo 'System configuration complete. You will now be redirected to docker.com'
-echo 'so you can download and install Docker Desktop.'
+echo 'System configuration complete!'
+echo 'You will now be redirected to docker.com so you can download and install Docker '
+echo 'Desktop.'
 
 press_any_key_to_continue
 

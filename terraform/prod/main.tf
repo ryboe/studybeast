@@ -16,6 +16,7 @@ terraform {
 }
 
 locals {
+  domain           = "ryanboehning.com"
   gcp_project_name = "studybeast-prod"
   gcp_region       = "us-central1"
   gcp_zone         = "us-central1-b"
@@ -84,3 +85,17 @@ module "dbproxy" {
   # can't create an proxy instance until we have a VPC to put it in.
   vpc_name = module.vpc.name
 }
+
+module "api" {
+  source = "../modules/api"
+
+  image                   = var.api_image
+  container_registry_link = google_container_registry.main
+  region                  = local.gcp_region
+  domain                  = local.domain
+  db_name                 = module.db.name
+  db_password             = var.api_db_password
+  project_name            = local.gcp_project_name
+}
+
+resource "google_container_registry" "main" {}
