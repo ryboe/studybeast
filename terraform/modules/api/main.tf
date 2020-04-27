@@ -4,6 +4,11 @@ locals {
   service_name = "studybeast-api"
 }
 
+data "google_compute_subnetwork" "regional_subnet" {
+  name   = var.vpc_name
+  region = var.region
+}
+
 resource "google_cloud_run_service" "api" {
   name       = local.service_name
   location   = var.region
@@ -57,4 +62,11 @@ resource "google_sql_user" "api_user" {
   name     = "api_user"
   instance = var.db_name
   password = var.db_password
+}
+
+resource "google_vpc_access_connector" "api_connector" {
+  name          = "api-connector"
+  ip_cidr_range = data.google_compute_subnetwork.regional_subnet.ip_cidr_range
+  network       = var.vpc_name
+  region        = var.db_region # deploy the connector adjacent to the db
 }

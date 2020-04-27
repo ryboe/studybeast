@@ -1,9 +1,8 @@
 terraform {
   required_version = "~> 0.12.24"
   required_providers {
-    docker      = "~> 2.7.0"
-    google      = "~> 3.17.0"
-    google-beta = "~> 3.17.0"
+    google      = "~> 3.18.0"
+    google-beta = "~> 3.18.0"
     random      = "~> 2.2.1"
     tfe         = "~> 0.16.0"
   }
@@ -89,13 +88,15 @@ module "dbproxy" {
 module "api" {
   source = "../modules/api"
 
-  image                   = var.api_image
   container_registry_link = google_container_registry.main
-  region                  = local.gcp_region
-  domain                  = local.domain
   db_name                 = module.db.name
   db_password             = var.api_db_password
+  domain                  = local.domain
+  image                   = var.api_image
   project_name            = local.gcp_project_name
+  region                  = local.gcp_region # where the API will be deployed
+  db_region               = local.gcp_region # where the db is located
+  vpc_name                = module.vpc.name
 }
 
 resource "google_container_registry" "main" {}

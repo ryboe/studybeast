@@ -15,6 +15,11 @@ variable "db_password" {
   type        = string
 }
 
+variable "db_region" {
+  description = "The region where the db is deployed (e.g. us-central1)"
+  type        = string
+}
+
 variable "domain" {
   description = "The domain under which the API image will run, e.g. 'ryanboehning.com' from 'api.ryanboehning.com'"
   type        = string
@@ -30,13 +35,21 @@ variable "project_name" {
   type        = string
 }
 
+variable "region" {
+  description = "The region where the API containers will run (e.g. us-central1)"
+  type        = string
+}
+
 variable "traffic_percent" {
   description = "The percentage of traffic to send to this revision of the image"
   default     = 100
   type        = number
 }
 
-variable "region" {
-  description = "The region where the containers will run on Cloud Run (e.g. us-central1)"
+variable "vpc_name" {
+  description = <<-EOT
+    The name of the VPC that the API will connect to. The API runs outside of the
+    VPC. We need to know the name of the VPC so the API can connect to it.
+  EOT
   type        = string
 }
