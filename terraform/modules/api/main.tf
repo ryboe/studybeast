@@ -27,11 +27,17 @@ resource "google_cloud_run_service" "api" {
       }
     }
     spec {
+      service_account_name  = module.serviceaccount.email
+      container_concurrency = "80"
+
       containers {
         image = var.image
+
+        env {
+          name  = "PORT"
+          value = "8080"
+        }
       }
-      container_concurrency = "80"
-      service_account_name  = module.serviceaccount.email
     }
   }
 

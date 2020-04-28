@@ -1,8 +1,8 @@
 terraform {
   required_version = "~> 0.12.24"
   required_providers {
-    google      = "~> 3.18.0"
-    google-beta = "~> 3.18.0"
+    google      = "~> 3.19.0"
+    google-beta = "~> 3.19.0"
     random      = "~> 2.2.1"
     tfe         = "~> 0.16.0"
   }

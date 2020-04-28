@@ -30,7 +30,8 @@ gcloud services enable \
     iam.googleapis.com \
     oslogin.googleapis.com \
     servicenetworking.googleapis.com \
-    sqladmin.googleapis.com
+    sqladmin.googleapis.com \
+    vpcaccess.googleapis.com
 
 # Delete all the firewall rules in the default VPC. This is required to delete
 # the default VPC.
