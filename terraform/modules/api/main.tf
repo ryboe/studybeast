@@ -23,7 +23,6 @@ resource "google_cloud_run_service" "api" {
     metadata {
       annotations = {
         "autoscaling.knative.dev/maxScale" = "10" # TODO: increase this to 1000 for prod
-        "autoscaling.knative.dev/minScale" = "1"
       }
     }
     spec {
@@ -32,11 +31,6 @@ resource "google_cloud_run_service" "api" {
 
       containers {
         image = var.image
-
-        env {
-          name  = "PORT"
-          value = "8080"
-        }
       }
     }
   }
