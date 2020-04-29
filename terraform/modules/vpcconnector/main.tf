@@ -13,6 +13,6 @@ resource "google_compute_subnetwork" "vpc_connector_subnet" {
 resource "google_vpc_access_connector" "connector" {
   name          = "connector"
   ip_cidr_range = google_compute_subnetwork.vpc_connector_subnet.ip_cidr_range
-  network       = var.vpc_link.name
+  network       = google_compute_subnetwork.vpc_connector_subnet.network
   region        = var.region # deploy the connector adjacent to the db
 }
