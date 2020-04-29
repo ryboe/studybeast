@@ -9,6 +9,13 @@ data "google_compute_subnetwork" "regional_subnet" {
   region = var.region
 }
 
+data "google_iam_policy" "noauth" {
+  binding {
+    role    = "roles/run.invoker"
+    members = ["allUsers"]
+  }
+}
+
 resource "google_cloud_run_service" "api" {
   name       = local.service_name
   location   = var.region
@@ -56,6 +63,14 @@ resource "google_cloud_run_domain_mapping" "default" {
   spec {
     route_name = google_cloud_run_service.api.name
   }
+}
+
+resource "google_cloud_run_service_iam_policy" "noauth" {
+  location = google_cloud_run_service.api.location
+  project  = google_cloud_run_service.api.project
+  service  = google_cloud_run_service.api.name
+
+  policy_data = data.google_iam_policy.noauth.policy_data
 }
 
 resource "google_sql_user" "api_user" {
