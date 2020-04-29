@@ -65,7 +65,7 @@ resource "google_sql_user" "api_user" {
 }
 
 resource "google_vpc_access_connector" "api_connector" {
-  name          = "api-connector"
+  name          = "connector"
   ip_cidr_range = data.google_compute_subnetwork.regional_subnet.ip_cidr_range
   network       = var.vpc_name
   region        = var.db_region # deploy the connector adjacent to the db

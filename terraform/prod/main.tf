@@ -91,7 +91,7 @@ module "api" {
   container_registry_link = google_container_registry.main
   db_name                 = module.db.name
   db_password             = var.api_db_password
-  domain                  = local.domain
+  domain                  = "api.${local.domain}"
   image                   = var.api_image
   project_name            = local.gcp_project_name
   region                  = local.gcp_region # where the API will be deployed
