@@ -87,6 +87,11 @@ module "dbproxy" {
 
 module "api" {
   source = "../modules/api"
+  # TODO: I don't now why the beta provider is necessary but it is. Try to
+  # remove this in a couple months.
+  providers = {
+    google = google-beta # override the default google provider with the google-beta provider
+  }
 
   container_registry_link = google_container_registry.main
   db_name                 = module.db.name
