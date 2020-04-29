@@ -15,11 +15,15 @@ terraform {
 }
 
 locals {
-  domain           = "ryanboehning.com"
-  gcp_project_name = "studybeast-prod"
-  gcp_region       = "us-central1"
-  gcp_zone         = "us-central1-b"
-  vpc_name         = "main-vpc"
+  api_db_user            = "api_user"
+  db_disk_size           = 10            # GB, use at least 1700 for prod
+  db_instance_type       = "db-f1-micro" # TODO: use db-custom for prod
+  db_proxy_instance_type = "f1-micro"
+  domain                 = "ryanboehning.com"
+  gcp_project_name       = "studybeast-prod"
+  gcp_region             = "us-central1"
+  gcp_zone               = "us-central1-b"
+  vpc_name               = "main-vpc"
 }
 
 provider "google" {
@@ -40,9 +44,7 @@ module "vpc" {
     google = google-beta # override the default google provider with the google-beta provider
   }
   source = "../modules/vpc"
-
-  name        = local.vpc_name
-  description = "The main StudyBeast VPC that holds all the instances"
+  name   = local.vpc_name
 }
 
 module "db" {
@@ -54,12 +56,11 @@ module "db" {
 
   # disk_size = 1700 # minimum GB to get max IOPS
   # instance_type = "db-custom-8-32768" # 8 cores, 32 GB RAM, min size to get max network bandwidth from google
-  disk_size     = 10                    # TODO: use 1700 for prod
-  instance_type = "db-f1-micro"         # TODO: use db-custom for prod
+  disk_size     = local.db_disk_size
+  instance_type = local.db_instance_type
+  user          = local.api_db_user
   password      = var.proxy_db_password # this is a variable because it's a secret. it's stored here: https://app.terraform.io/app/studybeast/workspaces/prod/variables
-  user          = "api_user"
   vpc_link      = module.vpc.self_link
-  vpc_name      = module.vpc.name
 
   # There's a dependency relationship between the db and the VPC that
   # terraform can't figure out. The db instance depends on the VPC because it
@@ -74,8 +75,8 @@ module "db" {
 module "dbproxy" {
   source = "../modules/dbproxy"
 
-  machine_type     = "f1-micro"
   db_instance_name = module.db.connection_name # e.g. my-project:us-central1:my-db
+  machine_type     = local.db_proxy_instance_type
   region           = local.gcp_region
   zone             = local.gcp_zone
 
@@ -87,9 +88,6 @@ module "dbproxy" {
 
 module "api" {
   source = "../modules/api"
-  providers = {
-    google = google-beta # override the default google provider with the google-beta provider
-  }
 
   container_registry_link = google_container_registry.main
   db_name                 = module.db.name

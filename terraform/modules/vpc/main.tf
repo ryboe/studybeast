@@ -1,7 +1,6 @@
 
 resource "google_compute_network" "vpc" {
   name                    = var.name
-  description             = var.description
   routing_mode            = "GLOBAL"
   auto_create_subnetworks = true
 }

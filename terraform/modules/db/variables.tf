@@ -24,11 +24,6 @@ variable "user" {
   type        = string
 }
 
-variable "vpc_name" {
-  description = "The name of the VPC where the db will live"
-  type        = string
-}
-
 variable "vpc_link" {
   description = "A link to the VPC resource where the db will live (i.e. google_compute_network.some_vpc.self_link)"
   type        = string
