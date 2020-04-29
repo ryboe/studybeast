@@ -96,7 +96,7 @@ module "api" {
   image                   = var.api_image
   project_name            = local.gcp_project_name
   region                  = local.gcp_region # where the API will be deployed
-  db_region               = local.gcp_region # where the db is located
+  db_region               = module.db.region # where the db is located
   vpc_link                = module.vpc.self_link
 }
 
