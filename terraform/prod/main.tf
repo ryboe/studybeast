@@ -16,6 +16,7 @@ terraform {
 
 locals {
   api_db_user            = "api_user"
+  dbproxy_db_user        = "dbproxy_user"
   db_disk_size           = 10            # GB, use at least 1700 for prod
   db_instance_type       = "db-f1-micro" # TODO: use db-custom for prod
   db_proxy_instance_type = "f1-micro"
@@ -58,8 +59,6 @@ module "db" {
   # instance_type = "db-custom-8-32768" # 8 cores, 32 GB RAM, min size to get max network bandwidth from google
   disk_size     = local.db_disk_size
   instance_type = local.db_instance_type
-  user          = local.api_db_user
-  password      = var.proxy_db_password # this is a variable because it's a secret. it's stored here: https://app.terraform.io/app/studybeast/workspaces/prod/variables
   vpc_link      = module.vpc.self_link
 
   # There's a dependency relationship between the db and the VPC that
@@ -76,6 +75,8 @@ module "dbproxy" {
   source = "../modules/dbproxy"
 
   db_instance_name = module.db.connection_name # e.g. my-project:us-central1:my-db
+  db_user          = local.dbproxy_db_user
+  db_password      = var.dbproxy_db_password
   machine_type     = local.db_proxy_instance_type
   region           = local.gcp_region
   zone             = local.gcp_zone
@@ -91,6 +92,7 @@ module "api" {
 
   container_registry_link = google_container_registry.main
   db_name                 = module.db.name
+  db_user                 = local.api_db_user
   db_password             = var.api_db_password
   domain                  = "api.${local.domain}"
   image                   = var.api_image

@@ -14,16 +14,6 @@ variable "instance_type" {
   type        = string
 }
 
-variable "password" {
-  description = "The db password used to connect to the Postgers db"
-  type        = string
-}
-
-variable "user" {
-  description = "The username of the db user"
-  type        = string
-}
-
 variable "vpc_link" {
   description = "A link to the VPC resource where the db will live (i.e. google_compute_network.some_vpc.self_link)"
   type        = string

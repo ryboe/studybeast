@@ -4,6 +4,16 @@ variable "db_instance_name" {
   type        = string
 }
 
+variable "db_password" {
+  description = "The db password used to connect to the Postgers db"
+  type        = string
+}
+
+variable "db_user" {
+  description = "The username of the db user"
+  type        = string
+}
+
 variable "machine_type" {
   description = "The type of VM you want, e.g. f1-micro, c2-standard-4"
   type        = string

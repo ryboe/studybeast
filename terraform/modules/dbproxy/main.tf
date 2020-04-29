@@ -62,6 +62,12 @@ resource "google_compute_instance" "db_proxy" {
   }
 }
 
+resource "google_sql_user" "dbproxy_user" {
+  instance = var.db_instance_name
+  name     = var.db_user
+  password = var.db_password
+}
+
 module "serviceaccount" {
   source = "../serviceaccount"
 

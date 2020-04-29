@@ -10,6 +10,11 @@ variable "db_name" {
   type        = string
 }
 
+variable "db_user" {
+  description = "The Postgres user account that the API will connect to"
+  type        = string
+}
+
 variable "db_password" {
   description = "The db password the API will use to connect to the db"
   type        = string

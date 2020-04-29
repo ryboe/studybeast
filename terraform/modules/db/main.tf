@@ -1,9 +1,4 @@
 
-resource "google_project_service" "enable_sqladmin_api" {
-  service            = "sqladmin.googleapis.com"
-  disable_on_destroy = false
-}
-
 resource "google_sql_database" "main" {
   name     = "main"
   instance = google_sql_database_instance.main_primary.name
@@ -89,12 +84,6 @@ resource "google_sql_database_instance" "main_primary" {
       hour = 9 # 2am PST, 5am EST, 9am UTC
     }
   }
-}
-
-resource "google_sql_user" "proxy_user" {
-  name     = var.user
-  instance = google_sql_database_instance.main_primary.name
-  password = var.password
 }
 
 # This is for appending a suffix to the database instance name. This name needs

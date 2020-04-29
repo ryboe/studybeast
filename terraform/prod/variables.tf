@@ -9,7 +9,7 @@ variable "api_image" {
   type        = string
 }
 
-variable "proxy_db_password" {
+variable "dbproxy_db_password" {
   description = "The db password used by the dbproxy service"
   type        = string
 }
