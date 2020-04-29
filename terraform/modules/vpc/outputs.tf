@@ -8,7 +8,7 @@ output "private_vpc_connection" {
   value       = google_service_networking_connection.private_vpc_connection
 }
 
-output "uri" {
-  description = "The URI of the VPC" # TODO: better desc
+output "self_link" {
+  description = "A reference to the VPC resource itself"
   value       = google_compute_network.vpc.self_link
 }

@@ -80,8 +80,8 @@ resource "google_sql_database_instance" "main_primary" {
     }
 
     ip_configuration {
-      ipv4_enabled    = false       # don't give the db a public IPv4
-      private_network = var.vpc_uri # link to the VPC where the db will be assigned a private IP
+      ipv4_enabled    = false        # don't give the db a public IPv4
+      private_network = var.vpc_link # link to the VPC where the db will be assigned a private IP
     }
 
     maintenance_window {

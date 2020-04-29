@@ -4,10 +4,7 @@ locals {
   service_name = "studybeast-api"
 }
 
-data "google_compute_subnetwork" "regional_subnet" {
-  name   = var.vpc_name
-  region = var.region
-}
+
 
 data "google_iam_policy" "noauth" {
   binding {
@@ -79,9 +76,9 @@ resource "google_sql_user" "api_user" {
   password = var.db_password
 }
 
-resource "google_vpc_access_connector" "api_connector" {
-  name          = "connector"
-  ip_cidr_range = data.google_compute_subnetwork.regional_subnet.ip_cidr_range
-  network       = var.vpc_name
-  region        = var.db_region # deploy the connector adjacent to the db
+module "vpcconnector" {
+  source = "../vpcconnector"
+
+  region   = var.db_region
+  vpc_link = var.vpc_link
 }

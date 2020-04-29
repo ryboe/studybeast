@@ -54,8 +54,8 @@
 #   instance_type = "db-f1-micro"       # TODO: use db-custom for prod
 #   password      = var.api_db_password # this is a variable because it's a secret. it's stored here: https://app.terraform.io/app/studybeast/workspaces/studybeast-dev-ryan/variables
 #   user          = "api_user"
+#   vpc_link      = module.vpc.self_link
 #   vpc_name      = module.vpc.name
-#   vpc_uri       = module.vpc.uri
 
 #   # There's a dependency relationship between the db and the VPC that
 #   # terraform can't figure out. The db instance depends on the VPC because it

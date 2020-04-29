@@ -16,7 +16,7 @@ variable "db_password" {
 }
 
 variable "db_region" {
-  description = "The region where the db is deployed (e.g. us-central1)"
+  description = "The region where the db is deployed, e.g. us-central1"
   type        = string
 }
 
@@ -36,7 +36,7 @@ variable "project_name" {
 }
 
 variable "region" {
-  description = "The region where the API containers will run (e.g. us-central1)"
+  description = "The region where the API containers will run, e.g. us-central1"
   type        = string
 }
 
@@ -46,10 +46,6 @@ variable "traffic_percent" {
   type        = number
 }
 
-variable "vpc_name" {
-  description = <<-EOT
-    The name of the VPC that the API will connect to. The API runs outside of the
-    VPC. We need to know the name of the VPC so the API can connect to it.
-  EOT
-  type        = string
+variable "vpc_link" {
+  description = "A link to the VPC that Cloud Run will connect to, e.g google_compute_network.vpc"
 }

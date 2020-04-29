@@ -29,7 +29,7 @@ variable "vpc_name" {
   type        = string
 }
 
-variable "vpc_uri" {
-  description = "The URI of the VPC where the db will live (i.e. google_compute_network.some_vpc.self_link)"
+variable "vpc_link" {
+  description = "A link to the VPC resource where the db will live (i.e. google_compute_network.some_vpc.self_link)"
   type        = string
 }

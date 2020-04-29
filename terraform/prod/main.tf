@@ -58,8 +58,8 @@ module "db" {
   instance_type = "db-f1-micro"         # TODO: use db-custom for prod
   password      = var.proxy_db_password # this is a variable because it's a secret. it's stored here: https://app.terraform.io/app/studybeast/workspaces/prod/variables
   user          = "api_user"
+  vpc_link      = module.vpc.self_link
   vpc_name      = module.vpc.name
-  vpc_uri       = module.vpc.uri
 
   # There's a dependency relationship between the db and the VPC that
   # terraform can't figure out. The db instance depends on the VPC because it
@@ -81,17 +81,12 @@ module "dbproxy" {
 
   # Even though module.vpc.name is identical to local.vpc_name, passing
   # module.vpc.name prevents the proxy from being created before the VPC. We
-  # can't create an proxy instance until we have a VPC to put it in.
+  # can't create a proxy instance until we have a VPC to put it in.
   vpc_name = module.vpc.name
 }
 
 module "api" {
   source = "../modules/api"
-  # TODO: I don't now why the beta provider is necessary but it is. Try to
-  # remove this in a couple months.
-  providers = {
-    google = google-beta # override the default google provider with the google-beta provider
-  }
 
   container_registry_link = google_container_registry.main
   db_name                 = module.db.name
@@ -101,7 +96,7 @@ module "api" {
   project_name            = local.gcp_project_name
   region                  = local.gcp_region # where the API will be deployed
   db_region               = local.gcp_region # where the db is located
-  vpc_name                = module.vpc.name
+  vpc_link                = module.vpc.self_link
 }
 
 resource "google_container_registry" "main" {}
