@@ -63,7 +63,7 @@ resource "google_compute_instance" "db_proxy" {
 }
 
 resource "google_sql_user" "dbproxy_user" {
-  instance = var.db_instance_name
+  instance = split(":", var.db_instance_name)[2] # my-project:us-central1:my-db -> my-db
   name     = var.db_user
   password = var.db_password
 }

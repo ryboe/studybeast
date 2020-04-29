@@ -74,7 +74,7 @@ module "db" {
 module "dbproxy" {
   source = "../modules/dbproxy"
 
-  db_instance_name = module.db.connection_name # e.g. my-project:us-central1:my-db
+  db_instance_name = module.db.instance_name # e.g. my-project:us-central1:my-db
   db_user          = local.dbproxy_db_user
   db_password      = var.dbproxy_db_password
   machine_type     = local.db_proxy_instance_type

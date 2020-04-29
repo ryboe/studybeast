@@ -1,11 +1,11 @@
 
 variable "db_instance_name" {
-  description = "The name of the Cloud SQL db, e.g. my-project:us-centra1:my-sql-db"
+  description = "The full instance name of the Cloud SQL db, e.g. my-project:us-central1:my-db"
   type        = string
 }
 
 variable "db_password" {
-  description = "The db password used to connect to the Postgers db"
+  description = "The db password used to connect to the Postgres db"
   type        = string
 }
 

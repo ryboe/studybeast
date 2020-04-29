@@ -6,7 +6,7 @@ variable "container_registry_link" {
 }
 
 variable "db_name" {
-  description = "The name of the database that the API will connect to"
+  description = "The name of the database that the API will connect to, e.g. main-primary"
   type        = string
 }
 
