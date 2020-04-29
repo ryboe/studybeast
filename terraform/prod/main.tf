@@ -87,6 +87,9 @@ module "dbproxy" {
 
 module "api" {
   source = "../modules/api"
+  providers = {
+    google = google-beta # override the default google provider with the google-beta provider
+  }
 
   container_registry_link = google_container_registry.main
   db_name                 = module.db.name
