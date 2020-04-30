@@ -1,8 +1,9 @@
 // api module
 
 locals {
-  connector_subnet_ip_range = "10.0.0.0/28"
+  connector_subnet_ip_range = "10.0.0.0/28" # the CIDR must be a /28 (four IP addresses)
   service_name              = "studybeast-api"
+  max_containers            = "10" # TODO: increase this to 1000 for prod
 }
 
 data "google_iam_policy" "noauth" {
@@ -25,7 +26,7 @@ resource "google_cloud_run_service" "api" {
   template {
     metadata {
       annotations = {
-        "autoscaling.knative.dev/maxScale" = "10" # TODO: increase this to 1000 for prod
+        "autoscaling.knative.dev/maxScale" = local.max_containers
       }
     }
     spec {
