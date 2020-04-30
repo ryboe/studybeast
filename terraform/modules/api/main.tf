@@ -77,6 +77,7 @@ resource "google_sql_user" "api_user" {
 module "vpcconnector" {
   source = "../vpcconnector"
 
-  region   = var.db_region
-  vpc_link = var.vpc_link
+  project_name = var.project_name # e.g. studybeast-prod
+  region       = var.db_region
+  vpc_link     = var.vpc_link
 }
