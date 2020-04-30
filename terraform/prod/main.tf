@@ -92,14 +92,14 @@ module "api" {
 
   container_registry_link = google_container_registry.main
   db_name                 = module.db.name
-  db_user                 = local.api_db_user
   db_password             = var.api_db_password
+  db_region               = module.db.region # where the db is located
+  db_user                 = local.api_db_user
   domain                  = "api.${local.domain}"
   image                   = var.api_image
   project_name            = local.gcp_project_name
   region                  = local.gcp_region # where the API will be deployed
-  db_region               = module.db.region # where the db is located
-  vpc_link                = module.vpc.self_link
+  vpc_name                = module.vpc.name
 }
 
 resource "google_container_registry" "main" {}

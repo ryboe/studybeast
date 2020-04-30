@@ -51,6 +51,7 @@ variable "traffic_percent" {
   type        = number
 }
 
-variable "vpc_link" {
-  description = "A link to the VPC that Cloud Run will connect to, e.g google_compute_network.vpc"
+variable "vpc_name" {
+  description = "The name of the VPC where the connector will be deployed, e.g. main-vpc"
+  type        = string
 }
