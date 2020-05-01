@@ -74,7 +74,7 @@ resource "google_compute_instance" "db_proxy" {
 
 # Create the dbproxy subdomain (e.g. dbproxy.example.com).
 resource "google_dns_record_set" "dbproxy" {
-  name         = "dbproxy.${var.domain}"
+  name         = "dbproxy.${var.domain}."
   managed_zone = var.dns_zone_name
   type         = "A"
   ttl          = 300 # 5 min

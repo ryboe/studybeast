@@ -69,7 +69,7 @@ resource "google_cloud_run_service_iam_policy" "noauth" {
 
 # Create the api subdomain (e.g. api.example.com).
 resource "google_dns_record_set" "api" {
-  name         = "api.${var.domain}"
+  name         = "api.${var.domain}."
   managed_zone = var.dns_zone_name
   type         = "CNAME"
   ttl          = 300 # 5 min  TODO: bump this up to 24 hours if it works
