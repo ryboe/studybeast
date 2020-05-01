@@ -47,7 +47,7 @@ module "api" {
   db_password             = var.api_db_password
   db_region               = module.db.region # where the db is located
   db_user                 = local.api_db_user
-  domain                  = "api.${local.domain}"
+  domain                  = local.domain
   dns_zone_name           = module.dns.zone_name
   image                   = var.api_image
   project_name            = local.gcp_project_name
@@ -99,9 +99,10 @@ module "dbproxy" {
 module "dns" {
   source = "../modules/dns"
 
-  domain = "ryanboehning.com"
+  domain = local.domain
 
   # The quotation marks are a required part of the token, so we must escape them.
+  # TODO: make this a local (do we need to triple escape the quotes \\\")?
   domain_ownership_verification_token = "\"google-site-verification=t9PY56lYU-o4wC77U_eR7trEocsB-lAxFHP3epR0BUM\""
 }
 

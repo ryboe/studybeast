@@ -26,12 +26,12 @@ variable "db_region" {
 }
 
 variable "domain" {
-  description = "The domain under which the API image will run, e.g. 'ryanboehning.com' from 'api.ryanboehning.com'"
+  description = "The domain under which the API image will run, e.g. 'ryanboehning.com'"
   type        = string
 }
 
 variable "dns_zone_name" {
-  description = "The Cloud DNS zone where the api.<domain>.com record will be created"
+  description = "The Cloud DNS zone where the api subdomain CNAME record will be created"
   type        = string
 }
 
