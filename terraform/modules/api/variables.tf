@@ -30,6 +30,11 @@ variable "domain" {
   type        = string
 }
 
+variable "dns_zone_name" {
+  description = "The Cloud DNS zone where the api.<domain>.com record will be created"
+  type        = string
+}
+
 variable "image" {
   description = "The API container image you want to deploy, e.g. gcr.io/studybeast-prod/api"
   type        = string

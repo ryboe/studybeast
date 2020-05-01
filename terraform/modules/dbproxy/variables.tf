@@ -1,3 +1,4 @@
+// dbproxy module
 
 variable "db_instance_name" {
   description = "The full instance name of the Cloud SQL db, e.g. my-project:us-central1:my-db"
@@ -11,6 +12,19 @@ variable "db_password" {
 
 variable "db_user" {
   description = "The username of the db user"
+  type        = string
+}
+
+variable "dns_zone_name" {
+  description = "The Cloud DNS zone where the dbproxy subdomain will be created"
+  type        = string
+}
+
+variable "domain" {
+  description = <<-EOT
+    The domain under which the dbproxy subdomain will be created, e.g. example.com
+    for dbproxy.example.com
+  EOT
   type        = string
 }
 

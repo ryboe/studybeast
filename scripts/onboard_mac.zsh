@@ -75,6 +75,7 @@ brew bundle --no-lock --file $SCRIPT_PATH/../Brewfile
 echo ''
 echo 'Connecting the gcloud utility to your GCP account...'
 
+gcloud components update
 gcloud init
 gcloud compute os-login ssh-keys add --key-file ~/.ssh/id_ed25519.pub --ttl 365d
 

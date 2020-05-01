@@ -1,3 +1,4 @@
+// db module
 
 variable "db_depends_on" {
   description = "A single resource that the database instance depends on"

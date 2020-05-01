@@ -1,3 +1,5 @@
+// vpc module
+
 output "name" {
   description = "The name of the VPC" # TODO: better desc
   value       = google_compute_network.vpc.name

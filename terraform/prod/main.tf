@@ -48,6 +48,7 @@ module "api" {
   db_region               = module.db.region # where the db is located
   db_user                 = local.api_db_user
   domain                  = "api.${local.domain}"
+  dns_zone_name           = module.dns.zone_name
   image                   = var.api_image
   project_name            = local.gcp_project_name
   region                  = local.gcp_region # where the API will be deployed
@@ -83,6 +84,8 @@ module "dbproxy" {
   db_instance_name = module.db.instance_name # e.g. my-project:us-central1:my-db
   db_user          = local.dbproxy_db_user
   db_password      = var.dbproxy_db_password
+  dns_zone_name    = module.dns.zone_name
+  domain           = local.domain
   machine_type     = local.db_proxy_instance_type
   region           = local.gcp_region
   zone             = local.gcp_zone
@@ -91,6 +94,15 @@ module "dbproxy" {
   # module.vpc.name prevents the proxy from being created before the VPC. We
   # can't create a proxy instance until we have a VPC to put it in.
   vpc_name = module.vpc.name
+}
+
+module "dns" {
+  source = "../modules/dns"
+
+  domain = "ryanboehning.com"
+
+  # The quotation marks are a required part of the token, so we must escape them.
+  domain_ownership_verification_token = "\"google-site-verification=t9PY56lYU-o4wC77U_eR7trEocsB-lAxFHP3epR0BUM\""
 }
 
 module "vpc" {
@@ -102,4 +114,6 @@ module "vpc" {
   name   = local.vpc_name
 }
 
+# We don't specify the region, so the registry defaults to being global, not
+# regional (gcr.io vs us.gcr.io).
 resource "google_container_registry" "main" {}

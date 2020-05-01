@@ -1,7 +1,16 @@
+// dbproxy
 
 data "google_compute_subnetwork" "regional_subnet" {
   name   = var.vpc_name
   region = var.region
+}
+
+# We reserve a public IP so that we can assign it to the dbproxy subdomain. Then
+# the proxy VM can be accessed at dbproxy.example.com.
+resource "google_compute_address" "public_static_ip" {
+  name         = "dbproxy-public-static-ip"
+  address_type = "EXTERNAL"
+  network_tier = "PREMIUM"
 }
 
 resource "google_compute_instance" "db_proxy" {
@@ -42,6 +51,7 @@ resource "google_compute_instance" "db_proxy" {
     # The access_config block must be set for the instance to have a public IP,
     # even if it's empty.
     access_config {
+      nat_ip       = google_compute_address.public_static_ip.address
       network_tier = "PREMIUM"
     }
   }
@@ -60,6 +70,15 @@ resource "google_compute_instance" "db_proxy" {
     # access to all Google Cloud APIs through OAuth.
     scopes = ["cloud-platform"]
   }
+}
+
+# Create the dbproxy subdomain (e.g. dbproxy.example.com).
+resource "google_dns_record_set" "dbproxy" {
+  name         = "dbproxy.${var.domain}"
+  managed_zone = var.dns_zone_name
+  type         = "A"
+  ttl          = 300 # 5 min
+  rrdatas      = [google_compute_address.public_static_ip.address]
 }
 
 resource "google_sql_user" "dbproxy_user" {
