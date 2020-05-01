@@ -39,13 +39,19 @@ provider "google-beta" {
   zone    = local.gcp_zone
 }
 
-module "vpc" {
-  # We need the beta provider to enable setting a private IP for the db.
-  providers = {
-    google = google-beta # override the default google provider with the google-beta provider
-  }
-  source = "../modules/vpc"
-  name   = local.vpc_name
+module "api" {
+  source = "../modules/api"
+
+  container_registry_link = google_container_registry.main
+  db_name                 = module.db.name
+  db_password             = var.api_db_password
+  db_region               = module.db.region # where the db is located
+  db_user                 = local.api_db_user
+  domain                  = "api.${local.domain}"
+  image                   = var.api_image
+  project_name            = local.gcp_project_name
+  region                  = local.gcp_region # where the API will be deployed
+  vpc_name                = module.vpc.name
 }
 
 module "db" {
@@ -87,19 +93,13 @@ module "dbproxy" {
   vpc_name = module.vpc.name
 }
 
-module "api" {
-  source = "../modules/api"
-
-  container_registry_link = google_container_registry.main
-  db_name                 = module.db.name
-  db_password             = var.api_db_password
-  db_region               = module.db.region # where the db is located
-  db_user                 = local.api_db_user
-  domain                  = "api.${local.domain}"
-  image                   = var.api_image
-  project_name            = local.gcp_project_name
-  region                  = local.gcp_region # where the API will be deployed
-  vpc_name                = module.vpc.name
+module "vpc" {
+  # We need the beta provider to enable setting a private IP for the db.
+  providers = {
+    google = google-beta # override the default google provider with the google-beta provider
+  }
+  source = "../modules/vpc"
+  name   = local.vpc_name
 }
 
 resource "google_container_registry" "main" {}

@@ -24,13 +24,19 @@ fi
 gcloud auth configure-docker 2>/dev/null
 gcloud config set project "$GCP_PROJECT_ID"
 gcloud services enable \
+    clouderrorreporting.googleapis.com \
     cloudresourcemanager.googleapis.com \
+    cloudtrace.googleapis.com \
     compute.googleapis.com \
     containerregistry.googleapis.com \
     iam.googleapis.com \
+    logging.googleapis.com \
+    monitoring.googleapis.com \
     oslogin.googleapis.com \
     servicenetworking.googleapis.com \
+    spanner.googleapis.com \
     sqladmin.googleapis.com \
+    storage.googleapis.com \
     vpcaccess.googleapis.com
 
 # Delete all the firewall rules in the default VPC. This is required to delete
