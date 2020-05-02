@@ -17,7 +17,7 @@ data "google_iam_policy" "cloud_run_invoker_role" {
 
 resource "google_cloud_run_domain_mapping" "default" {
   location = var.region
-  name     = var.domain
+  name     = "api.${var.domain}"
 
   metadata {
     namespace = var.project_name
