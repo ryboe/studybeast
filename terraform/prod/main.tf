@@ -15,16 +15,17 @@ terraform {
 }
 
 locals {
-  api_db_user            = "api_user"
-  dbproxy_db_user        = "dbproxy_user"
-  db_disk_size           = 10            # GB, use at least 1700 for prod
-  db_instance_type       = "db-f1-micro" # TODO: use db-custom for prod
-  db_proxy_instance_type = "f1-micro"
-  domain                 = "ryanboehning.com"
-  gcp_project_name       = "studybeast-prod"
-  gcp_region             = "us-central1"
-  gcp_zone               = "us-central1-b"
-  vpc_name               = "main-vpc"
+  api_db_user                         = "api_user"
+  dbproxy_db_user                     = "dbproxy_user"
+  db_disk_size                        = 10            # GB, use at least 1700 for prod
+  db_instance_type                    = "db-f1-micro" # TODO: use db-custom for prod
+  db_proxy_instance_type              = "f1-micro"
+  domain                              = "ryanboehning.com"
+  domain_ownership_verification_token = "\"google-site-verification=t9PY56lYU-o4wC77U_eR7trEocsB-lAxFHP3epR0BUM\""
+  gcp_project_name                    = "studybeast-prod"
+  gcp_region                          = "us-central1"
+  gcp_zone                            = "us-central1-b"
+  vpc_name                            = "main-vpc"
 }
 
 provider "google" {
@@ -103,7 +104,7 @@ module "dns" {
 
   # The quotation marks are a required part of the token, so we must escape them.
   # TODO: make this a local (do we need to triple escape the quotes \\\")?
-  domain_ownership_verification_token = "\"google-site-verification=t9PY56lYU-o4wC77U_eR7trEocsB-lAxFHP3epR0BUM\""
+  domain_ownership_verification_token = local.domain_ownership_verification_token
 }
 
 module "vpc" {

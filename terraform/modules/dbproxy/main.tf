@@ -30,8 +30,8 @@ resource "google_compute_instance" "db_proxy" {
   boot_disk {
     initialize_params {
       image = "cos-cloud/cos-stable"
-      size  = 10 # smallest disk possible is 10 GB
-      type  = "pd-ssd"
+      size  = 10       # smallest disk possible is 10 GB
+      type  = "pd-ssd" # use an SSD, not an HDD
     }
   }
 
