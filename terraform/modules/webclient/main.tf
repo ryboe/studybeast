@@ -57,7 +57,7 @@ resource "google_compute_target_https_proxy" "client" {
 }
 
 resource "google_compute_url_map" "urls" {
-  name            = "web-client-lb"
+  name            = "web-client-lb-url-map"
   description     = "This just maps all requests to the backend bucket" # TODO: better desc
   default_service = google_compute_backend_bucket.lb_backend.self_link
 }
