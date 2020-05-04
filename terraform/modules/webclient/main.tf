@@ -100,16 +100,24 @@ resource "google_storage_bucket" "web_client" {
   }
 }
 
-data "google_iam_policy" "storage_getter" {
+data "google_iam_policy" "all_users_storage_getter" {
   binding {
-    role    = "roles/storage.objects.get" # TODO: this is a permission. does it work as a role too, or do i need to make a custom role with just this permission?
+    role    = "roles/storage.objectGetter" # TODO: this is a permission. does it work as a role too, or do i need to make a custom role with just this permission?
     members = ["allUsers"]
   }
 }
 
-# TODO: add this to the web client bucket. first i want to deploy to see what the
-# default roles assigned to the bucket are
+resource "google_project_iam_custom_role" "object_getter" {
+  role_id     = "storage.objectGetter"
+  title       = "Storage Object Getter"
+  description = <<-EOT
+    A custom role that only grants the storage.objects.get permission. It prevents members
+    from listing the bucket, unlike the predefine Storage Object Viewer role.
+  EOT
+  permissions = ["storage.objects.get"]
+}
+
 resource "google_storage_bucket_iam_policy" "storage_getter_policy" {
   bucket      = google_storage_bucket.web_client.name
-  policy_data = data.google_iam_policy.storage_getter.policy_data
+  policy_data = data.google_iam_policy.all_users_storage_getter.policy_data
 }
