@@ -105,9 +105,11 @@ data "google_iam_policy" "all_users_storage_getter" {
     role    = "roles/storage.objectGetter" # TODO: this is a permission. does it work as a role too, or do i need to make a custom role with just this permission?
     members = ["allUsers"]
   }
+
+  depends_on = [google_project_iam_custom_role.storage_object_getter]
 }
 
-resource "google_project_iam_custom_role" "object_getter" {
+resource "google_project_iam_custom_role" "storage_object_getter" {
   role_id     = "storage.objectGetter"
   title       = "Storage Object Getter"
   description = <<-EOT
