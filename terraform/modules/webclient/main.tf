@@ -57,7 +57,7 @@ resource "google_compute_target_https_proxy" "client" {
 }
 
 resource "google_compute_url_map" "urls" {
-  name            = "web-client-lb-url-map"
+  name            = "web-client-lb"
   description     = "This just maps all requests to the backend bucket" # TODO: better desc
   default_service = google_compute_backend_bucket.lb_backend.self_link
 }
@@ -66,7 +66,7 @@ resource "google_dns_record_set" "domain_root_ipv4" {
   name         = "${var.domain}."
   managed_zone = var.dns_zone_name
   type         = "A"
-  ttl          = 3600
+  ttl          = 600
   rrdatas      = [google_compute_global_address.ipv4.address]
 }
 
@@ -74,7 +74,7 @@ resource "google_dns_record_set" "domain_root_ipv6" {
   name         = "${var.domain}."
   managed_zone = var.dns_zone_name
   type         = "AAAA"
-  ttl          = 3600
+  ttl          = 600
   rrdatas      = [google_compute_global_address.ipv6.address]
 }
 
