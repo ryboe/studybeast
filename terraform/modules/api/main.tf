@@ -16,6 +16,7 @@ data "google_iam_policy" "cloud_run_invoker_role" {
 }
 
 resource "google_cloud_run_domain_mapping" "default" {
+  provider = google-beta
   location = var.region
   name     = "api.${var.domain}"
 
