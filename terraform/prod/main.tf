@@ -26,7 +26,7 @@ locals {
   gcp_region                          = "us-central1"
   gcp_zone                            = "us-central1-b"
   vpc_name                            = "main-vpc"
-  web_client_bucket_name              = "${local.gcp_project_name}-client"
+  web_client_bucket_name              = "${local.gcp_project_name}-web-client-bucket"
 }
 
 provider "google" {
