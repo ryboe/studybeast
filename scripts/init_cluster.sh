@@ -29,6 +29,7 @@ gcloud services enable \
     cloudtrace.googleapis.com \
     compute.googleapis.com \
     containerregistry.googleapis.com \
+    containerscanning.googleapis.com \
     iam.googleapis.com \
     logging.googleapis.com \
     monitoring.googleapis.com \

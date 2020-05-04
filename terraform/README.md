@@ -13,6 +13,13 @@ Be aware that your GCP project name is permanent and can never be reused. If it 
 
 5. Congrats! You are now able to deploy a cluster. Switch to the `terraform/development` directory and run `terraform apply` to deploy your cluster.
 
+## How to set up GCR
+
+The initial deploy will create an artifacts.studybeast-prod.appspot.com storage
+bucket automatically. This bucket is where the GCR images are stored. Add a
+lifecycle rule to this bucket to delete images older than 90 days. This can't be
+done through Terraform. This only needs to be done once.
+
 ## How to set up a GCP organization
 
 This only needs to be done once.

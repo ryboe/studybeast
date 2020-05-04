@@ -16,16 +16,17 @@ terraform {
 
 locals {
   api_db_user                         = "api_user"
-  dbproxy_db_user                     = "dbproxy_user"
   db_disk_size                        = 10            # GB, use at least 1700 for prod
   db_instance_type                    = "db-f1-micro" # TODO: use db-custom for prod
-  db_proxy_instance_type              = "f1-micro"
+  dbproxy_db_user                     = "dbproxy_user"
+  dbproxy_instance_type               = "f1-micro"
   domain                              = "ryanboehning.com"
-  domain_ownership_verification_token = "\"google-site-verification=t9PY56lYU-o4wC77U_eR7trEocsB-lAxFHP3epR0BUM\""
+  domain_ownership_verification_token = "\"google-site-verification=t9PY56lYU-o4wC77U_eR7trEocsB-lAxFHP3epR0BUM\"" # must include quotes. must escape the quotes
   gcp_project_name                    = "studybeast-prod"
   gcp_region                          = "us-central1"
   gcp_zone                            = "us-central1-b"
   vpc_name                            = "main-vpc"
+  web_client_bucket_name              = "${local.gcp_project_name}-client"
 }
 
 provider "google" {
@@ -48,8 +49,8 @@ module "api" {
   db_password             = var.api_db_password
   db_region               = module.db.region # where the db is located
   db_user                 = local.api_db_user
-  domain                  = local.domain
   dns_zone_name           = module.dns.zone_name
+  domain                  = local.domain
   image                   = var.api_image
   project_name            = local.gcp_project_name
   region                  = local.gcp_region # where the API will be deployed
@@ -83,11 +84,11 @@ module "dbproxy" {
   source = "../modules/dbproxy"
 
   db_instance_name = module.db.instance_name # e.g. my-project:us-central1:my-db
-  db_user          = local.dbproxy_db_user
   db_password      = var.dbproxy_db_password
+  db_user          = local.dbproxy_db_user
   dns_zone_name    = module.dns.zone_name
   domain           = local.domain
-  machine_type     = local.db_proxy_instance_type
+  machine_type     = local.dbproxy_instance_type
   region           = local.gcp_region
   zone             = local.gcp_zone
 
@@ -114,6 +115,14 @@ module "vpc" {
   }
   source = "../modules/vpc"
   name   = local.vpc_name
+}
+
+module "webclient" {
+  source = "../modules/webclient"
+
+  bucket_name   = local.web_client_bucket_name
+  domain        = local.domain
+  dns_zone_name = module.dns.zone_name
 }
 
 # We don't specify the region, so the registry defaults to being global, not
