@@ -19,7 +19,7 @@ locals {
   db_disk_size                        = 10            # GB, use at least 1700 for prod
   db_instance_type                    = "db-f1-micro" # TODO: use db-custom for prod
   dbproxy_db_user                     = "dbproxy_user"
-  dbproxy_instance_type               = "f1-micro"
+  dbproxy_instance_type               = "g1-small"
   domain                              = "ryanboehning.com"
   domain_ownership_verification_token = "\"google-site-verification=t9PY56lYU-o4wC77U_eR7trEocsB-lAxFHP3epR0BUM\"" # must include quotes. must escape the quotes
   gcp_project_name                    = "studybeast-prod"

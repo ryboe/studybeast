@@ -21,12 +21,6 @@ resource "google_dns_record_set" "soa" {
   type         = "SOA"
   ttl          = 21600 # 6 hours
   rrdatas      = ["ns-cloud-c1.googledomains.com. cloud-dns-hostmaster.google.com. 1 21600 3600 259200 300"]
-
-  # You can't delete the SOA record from a managed zone.
-  # TODO: will this be cleaned up when the managed zone is deleted?
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "google_dns_record_set" "ns" {
