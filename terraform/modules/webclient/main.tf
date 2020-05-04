@@ -102,21 +102,11 @@ resource "google_storage_bucket" "web_client" {
 
 data "google_iam_policy" "all_users_storage_getter" {
   binding {
-    role    = "roles/storage.objectGetter" # TODO: this is a permission. does it work as a role too, or do i need to make a custom role with just this permission?
+    # legacyObjectReader grants only storage.objects.get permission (not list),
+    # which is exactly what we want. Ignore the "legacy" naming. It's fine.
+    role    = "roles/storage.legacyObjectReader"
     members = ["allUsers"]
   }
-
-  depends_on = [google_project_iam_custom_role.storage_object_getter]
-}
-
-resource "google_project_iam_custom_role" "storage_object_getter" {
-  role_id     = "storage.objectGetter"
-  title       = "Storage Object Getter"
-  description = <<-EOT
-    A custom role that only grants the storage.objects.get permission. It prevents members
-    from listing the bucket, unlike the predefine Storage Object Viewer role.
-  EOT
-  permissions = ["storage.objects.get"]
 }
 
 resource "google_storage_bucket_iam_policy" "storage_getter_policy" {
