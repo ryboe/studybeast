@@ -1,6 +1,6 @@
 # Terraform
 
-## How to set up a dev cluster
+## How to Set Up a Dev Cluster
 
 1. Get an admin to create a Terraform Cloud workspace and GCP project for you. They should have the same name, which is based on your company email address. For example, if your email is `ryan@studybeast.com`, then your workspace and GCP project will be named `studybeast-dev-ryan`.
 Be aware that your GCP project name is permanent and can never be reused. If it becomes deleted for some reason, the name is retired permanently.
@@ -13,14 +13,47 @@ Be aware that your GCP project name is permanent and can never be reused. If it 
 
 5. Congrats! You are now able to deploy a cluster. Switch to the `terraform/development` directory and run `terraform apply` to deploy your cluster.
 
-## How to set up GCR
+## The First Deploy
 
-The initial deploy will create an artifacts.studybeast-prod.appspot.com storage
+The first time a cluster is deployed, there are some manual steps to perform to
+make it work. I haven't figured out a way to automate these steps (yet).
+
+  1. Change the Google Domains nameservers to point to the ones in the Cloud DNS
+managed zone. After `terraform apply` finishes, the NS record on Cloud DNS will
+look something like this.
+
+```txt
+ns-cloud-d1.googledomains.com
+ns-cloud-d2.googledomains.com
+ns-cloud-d3.googledomains.com
+ns-cloud-d4.googledomains.com
+```
+
+We can't predict whether we'll get the `a1` nameserver or the `e1` nameserver.
+Go into Google domains, select _Use custome name servers_, and set them to the
+values that appear in Cloud DNS.
+
+  2. The initial deploy will create an artifacts.studybeast-prod.appspot.com storage
 bucket automatically. This bucket is where the GCR images are stored. Add a
 lifecycle rule to this bucket to delete images older than 90 days. This can't be
 done through Terraform. This only needs to be done once.
 
-## How to set up a GCP organization
+  3. Build and push the `api` and `redirector` images to GCR.
+
+```sh
+./scripts/build_and_push_api.sh
+./scripts/build_and_push_redirector.sh
+```
+
+  4. Use `gcloud` to deploy the `api` and `redirector` images.
+
+```sh
+# UNTESTED. DOES THIS WORK?
+gcloud run deploy studybeast-api --image=gcr.io/studybeast-prod/api
+gcloud run deploy studybeast-redirector --image=gcr.io/studybeast-prod/redirector
+```
+
+## How to Set Up a GCP rganization
 
 This only needs to be done once.
 
