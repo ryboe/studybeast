@@ -135,7 +135,7 @@ module "webclient" {
   source = "../modules/webclient"
 
   bucket_name   = local.web_client_bucket_name
-  domain        = local.domain
+  domain        = "www.${local.domain}"
   dns_zone_name = module.dns.zone_name
 }
 
