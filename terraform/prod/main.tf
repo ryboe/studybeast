@@ -1,10 +1,10 @@
 terraform {
   required_version = "~> 0.12.24"
   required_providers {
-    google      = "~> 3.19.0"
-    google-beta = "~> 3.19.0"
+    google      = "~> 3.20.0"
+    google-beta = "~> 3.20.0"
     random      = "~> 2.2.1"
-    tfe         = "~> 0.16.0"
+    tfe         = "~> 0.16.1"
   }
   backend "remote" {
     organization = "studybeast-org"
@@ -51,10 +51,24 @@ module "api" {
   db_user                 = local.api_db_user
   dns_zone_name           = module.dns.zone_name
   domain                  = local.domain
+  gcp_project_name        = local.gcp_project_name
   image                   = var.api_image
-  project_name            = local.gcp_project_name
+  max_containers          = "10"             # TODO: increase this to 1000 for prod
   region                  = local.gcp_region # where the API will be deployed
   vpc_name                = module.vpc.name
+}
+
+module "cloudrun" {
+  source = "../modules/cloudrun"
+
+  container_registry_link = google_container_registry.main
+  domain                  = local.domain
+  dns_zone_name           = module.dns.zone_name
+  image                   = var.redirector_image
+  max_containers          = "10" # TODO: increase this to 1000 for prod
+  gcp_project_name        = local.gcp_project_name
+  region                  = local.gcp_region
+  service_name            = "studybeast-redirector"
 }
 
 module "db" {

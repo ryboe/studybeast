@@ -40,7 +40,12 @@ variable "image" {
   type        = string
 }
 
-variable "project_name" {
+variable "max_containers" {
+  description = "The maximum number of containers to run, from 1-1000"
+  type        = number
+}
+
+variable "gcp_project_name" {
   description = "The name of the GCP project"
   type        = string
 }
@@ -48,12 +53,6 @@ variable "project_name" {
 variable "region" {
   description = "The region where the API containers will run, e.g. us-central1"
   type        = string
-}
-
-variable "traffic_percent" {
-  description = "The percentage of traffic to send to this revision of the image"
-  default     = 100
-  type        = number
 }
 
 variable "vpc_name" {

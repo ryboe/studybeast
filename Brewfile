@@ -1,3 +1,4 @@
+brew 'bash' # we need modern bash features in scripts
 brew 'diesel' # cli for running db migrations
 brew 'fd' # fast find replacement
 brew 'git' # the brewed git is more up-to-date than the system git

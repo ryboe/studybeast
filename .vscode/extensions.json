@@ -9,6 +9,7 @@
         "mikestead.dotenv",
         "ms-azuretools.vscode-docker",
         "ms-ossdata.vscode-postgresql",
+        "raynigon.nginx-formatter",
         "redhat.vscode-yaml",
         "serayuzgur.crates",
         "sharat.vscode-brewfile",
