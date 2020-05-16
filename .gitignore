@@ -34,3 +34,4 @@ terraform/development/backend.hcl
 
 api/target
 .terraform/
+Brewfile.lock.json
