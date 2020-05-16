@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 services:
   db:
     image: postgres:12.1-alpine
@@ -8,58 +8,6 @@ services:
       POSTGRES_USER: sbdbuser
     ports:
       - 5432:5432
-    command: [
-        'postgres',
-        '-c',
-        'archive_timeout=300',
-        '-c',
-        'checkpoint_completion_target=0.7',
-        # '-c',
-        # 'data_checksums=on',  # dockerized postgres won't start with this flag on for some reason
-        # '-c',
-        # 'default_transaction_isolation=serializable', # default cloud sql value is 'read committed'
-        '-c',
-        'effective_io_concurrency=200', # default cloud sql value is '1'. can't be changed
-        '-c',
-        'fsync=off', # speeds up db writes. cloud sql value is 'on' and should be left on
-        '-c',
-        'full_page_writes=off', # speeds up db writes. cloud sql value is 'on' and should be left on.
-        '-c',
-        'log_autovacuum_min_duration=0',
-        '-c',
-        'log_line_prefix=[%p]: [%l-1] db=%d,user=%u',
-        '-c',
-        'log_temp_files=0',
-        '-c',
-        'max_connections=1000',
-        '-c',
-        'max_wal_size=1504',
-        '-c',
-        'random_page_cost=1.1', # default cloud sql value is 4. should be 1.1 for SSDs
-        '-c',
-        'shared_buffers=2 GB', # default cloud sql value is '5157120' (depends on instance size. should be 25% of RAM)
-        '-c',
-        'shared_preload_libraries=pg_stat_statements,uuid-ossp',
-        # synchronous_commit=off speeds up db writes. cloud sql value is 'on'. we should switch this off.
-        # switching off boosts perf without risk of db corruption. might lose recently committed transactions
-        # in a crash, but the effect will be as if those transactions were aborted
-        '-c',
-        'synchronous_commit=off',
-        '-c',
-        'tcp_keepalives_count=9',
-        '-c',
-        'tcp_keepalives_idle=60',
-        '-c',
-        'tcp_keepalives_count=75',
-        '-c',
-        'temp_file_limit=1025563',
-        '-c',
-        'track_io_timing=on', # default cloud sql value is 'off'. should be left off.
-        # '-c',
-        # 'transaction_isolation=serializable', # default cloud sql value is 'read committed'. should be changed to serializable
-        '-c',
-        'wal_buffers=2048',
-        '-c',
-        'wal_compression=on', # default cloud sql value is 'off'. should be turned on
-      ]
-    # TODO: need to enable pg_stat_statements and uuid-ossp
+    volumes:
+      - ./db/postgresql.conf:/etc/postgresql.conf
+    command: ['postgres', '-c', 'config_file=/etc/postgresql.conf']
