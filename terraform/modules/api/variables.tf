@@ -35,6 +35,11 @@ variable "dns_zone_name" {
   type        = string
 }
 
+variable "gcp_project_name" {
+  description = "The name of the GCP project"
+  type        = string
+}
+
 variable "image" {
   description = "The API container image you want to deploy, e.g. gcr.io/studybeast-prod/api"
   type        = string
@@ -43,11 +48,6 @@ variable "image" {
 variable "max_containers" {
   description = "The maximum number of containers to run, from 1-1000"
   type        = number
-}
-
-variable "gcp_project_name" {
-  description = "The name of the GCP project"
-  type        = string
 }
 
 variable "region" {

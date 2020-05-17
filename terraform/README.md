@@ -38,19 +38,17 @@ bucket automatically. This bucket is where the GCR images are stored. Add a
 lifecycle rule to this bucket to delete images older than 90 days. This can't be
 done through Terraform. This only needs to be done once.
 
-  3. Build and push the `api` and `redirector` images to GCR.
+  3. Build and push the `api` image to GCR.
 
 ```sh
 ./scripts/build_and_push_api.sh
-./scripts/build_and_push_redirector.sh
 ```
 
-  4. Use `gcloud` to deploy the `api` and `redirector` images.
+  4. Use `gcloud` to deploy the `api` image.
 
 ```sh
 # UNTESTED. DOES THIS WORK?
 gcloud run deploy studybeast-api --image=gcr.io/studybeast-prod/api
-gcloud run deploy studybeast-redirector --image=gcr.io/studybeast-prod/redirector
 ```
 
 ## How to Set Up a GCP rganization

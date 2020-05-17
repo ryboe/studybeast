@@ -13,8 +13,3 @@ variable "dbproxy_db_password" {
   description = "The db password used by the dbproxy service"
   type        = string
 }
-
-variable "redirector_image" {
-  description = "The redirector image to deploy, e.g. gcr.io/studybeast-prod/redirector:latest"
-  type        = string
-}

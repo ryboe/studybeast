@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 0.12.24"
+  required_version = "~> 0.12.25"
   required_providers {
     google      = "~> 3.21.0"
     google-beta = "~> 3.21.0"
@@ -26,7 +26,6 @@ locals {
   gcp_region                          = "us-central1"
   gcp_zone                            = "us-central1-b"
   vpc_name                            = "main-vpc"
-  web_client_bucket_name              = "${local.gcp_project_name}-web-client-bucket"
 }
 
 provider "google" {
@@ -56,19 +55,6 @@ module "api" {
   max_containers          = "10"             # TODO: increase this to 1000 for prod
   region                  = local.gcp_region # where the API will be deployed
   vpc_name                = module.vpc.name
-}
-
-module "cloudrun" {
-  source = "../modules/cloudrun"
-
-  container_registry_link = google_container_registry.main
-  domain                  = local.domain
-  dns_zone_name           = module.dns.zone_name
-  image                   = var.redirector_image
-  max_containers          = "10" # TODO: increase this to 1000 for prod
-  gcp_project_name        = local.gcp_project_name
-  region                  = local.gcp_region
-  service_name            = "studybeast-redirector"
 }
 
 module "db" {
@@ -134,8 +120,8 @@ module "vpc" {
 module "webclient" {
   source = "../modules/webclient"
 
-  bucket_name   = local.web_client_bucket_name
-  domain        = "www.${local.domain}"
+  bucket_name   = local.domain
+  domain        = local.domain
   dns_zone_name = module.dns.zone_name
 }
 
