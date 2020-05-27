@@ -122,6 +122,7 @@ resource "google_sql_user" "api_user" {
 }
 
 resource "google_vpc_access_connector" "connector" {
+  provider      = google-beta
   name          = "connector"
   ip_cidr_range = local.connector_subnet_ip_range
   network       = var.vpc_name
